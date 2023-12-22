@@ -3,4 +3,5 @@ project(Task_4_1_3)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(Task_4_1_3 main.cpp)
+add_executable(Task_4_1_3 main.cpp
+        Ве_крест_крест.h)

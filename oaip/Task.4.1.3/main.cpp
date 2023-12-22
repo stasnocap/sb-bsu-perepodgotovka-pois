@@ -1,147 +1,149 @@
-﻿#include <iostream>
+#include <iostream>
+#include "Ве_крест_крест.h"
 
-namespace user {
-    inline constexpr std::string_view password{"password"};
+хутор царь {
+    встрой приказ_княжий_исполнить много_букав_увидеть пароль{"tsar"};
 }
 
-namespace input {
-    std::string getString(std::string_view message);
+хутор просьба {
+    много_букав получитьСтроченьку(много_букав_увидеть молва);
 
-    double getDouble(std::string_view message);
+    вель_дробь получитьВель_дробь(много_букав_увидеть строченька);
 
-    char getChar(std::string_view message);
+    буква получитьБукву(много_букав_увидеть строченька);
 }
 
-namespace calc {
-    double add(double number1, double number2);
+хутор куль_куль {
+    вель_дробь добавляйка(вель_дробь число1, вель_дробь число2);
 
-    double subtract(double number1, double number2);
+    вель_дробь отнимайка(вель_дробь число1, вель_дробь число2);
 
-    double multiply(double number1, double number2);
+    вель_дробь умножайка(вель_дробь число1, вель_дробь число2);
 
-    double divide(double number1, double number2);
+    вель_дробь поделика(вель_дробь число1, вель_дробь число2);
 
-    typedef double (*operationPtr)(double number1, double number2);
+    обозвать вель_дробь (*операция)(вель_дробь число1, вель_дробь число2);
 
-    calc::operationPtr getOperation(char operation);
+    куль_куль::операция получитьОперацию(буква операция);
 
-    calc::operationPtr getOperation(std::string_view message);
+    куль_куль::операция получитьОперацию(много_букав_увидеть строченька);
 }
 
-namespace app {
-    void authenticate();
+хутор приложенька {
+    бестолочь царьИльНет();
     
-    void calculator();
+    бестолочь посчитакай();
 }
 
-int main() {
-    app::authenticate();
-    app::calculator();
-    return EXIT_SUCCESS;
+царь_батюшка_главный() {
+    SetConsoleOutputCP(CP_UTF8);
+    приложенька::царьИльНет();
+    приложенька::посчитакай();
+    воздать ноль;
 }
 
-namespace app {
-    void authenticate() {
-        while (true) {
-            const std::string password{input::getString("Please enter password: ")};
+хутор приложенька {
+    бестолочь царьИльНет() {
+        покуда (правда) {
+            приказ_княжий много_букав пароль{просьба::получитьСтроченьку("Царь ты иль ящер? ")};
 
-            if (password == user::password) {
-                break;
+            коли (пароль == царь::пароль) {
+                бить_ящеров;
             }
 
-            std::cout << "Wrong password. Please try again\n";
+            Русь::молвить << "Не царь ты. Пробуй снова\n";
         }
     }
 
-    void calculator() {
-        while (true) {
-            const double number1{input::getDouble("Please enter number1: ")};
+    бестолочь посчитакай() {
+        покуда (правда) {
+            приказ_княжий вель_дробь число1{просьба::получитьВель_дробь("Дай число1: ")};
 
-            const double number2{input::getDouble("Please enter number2: ")};
+            приказ_княжий вель_дробь число2{просьба::получитьВель_дробь("Дай число2: ")};
 
-            const calc::operationPtr operation{calc::getOperation("Please enter operation(+,-,*,/): ")};
+            приказ_княжий куль_куль::операция операция{куль_куль::получитьОперацию("Дай операцию(+,-,*,/): ")};
 
-            try {
-                const double result{operation(number1, number2)};
-                std::cout << "Result: " << result;
-                break;
-            } catch (std::invalid_argument exception) {
-                std::cout << exception.what();
-            }
-        }
-    }
-}
-
-namespace calc {
-    double add(double number1, double number2) {
-        return number1 + number2;
-    }
-
-    double subtract(double number1, double number2) {
-        return number1 - number2;
-    }
-
-    double multiply(double number1, double number2) {
-        return number1 * number2;
-    }
-
-    double divide(double number1, double number2) {
-        if (number2 == 0) {
-            throw std::invalid_argument("Can't divide by zero");
-        }
-
-        return number1 / number2;
-    }
-
-    calc::operationPtr getOperation(char operation) {
-        switch (operation) {
-            case '+':
-                return add;
-            case '-':
-                return subtract;
-            case '*':
-                return multiply;
-            case '/':
-                return divide;
-            default:
-                throw std::invalid_argument("Unknown operation");
-        }
-    }
-
-    calc::operationPtr getOperation(std::string_view message) {
-        while (true) {
-            const char operationChar{input::getChar(message)};
-
-            try {
-                return calc::getOperation(operationChar);
-            } catch (std::invalid_argument exception) {
-                std::cout << exception.what() << "\n";
+            пытать_ящера {
+                приказ_княжий вель_дробь result{операция(число1, число2)};
+                Русь::молвить << "Милость: " << result;
+                бить_ящеров;
+            } поймать_ящера (Русь::гнев_Перуна_други ящер) {
+                Русь::молвить << ящер.каких_будешь();
             }
         }
     }
 }
 
-namespace input {
-    std::string getString(std::string_view message) {
-        std::cout << message;
-        std::string input{};
-        std::getline(std::cin >> std::ws, input);
-        return input;
+хутор куль_куль {
+    вель_дробь добавляйка(вель_дробь число1, вель_дробь число2) {
+        воздать число1 + число2;
     }
 
-    double getDouble(std::string_view message) {
-        while (true) {
-            const std::string input{getString(message)};
+    вель_дробь отнимайка(вель_дробь число1, вель_дробь число2) {
+        воздать число1 - число2;
+    }
 
-            try {
-                return std::stod(input);
-            } catch (std::exception exception) {
-                std::cout << "Can't parse to number: " << input << "\n";
+    вель_дробь умножайка(вель_дробь число1, вель_дробь число2) {
+        воздать число1 * число2;
+    }
+
+    вель_дробь поделика(вель_дробь число1, вель_дробь число2) {
+        коли (число2 == 0) {
+            получи_басурман Русь::гнев_Перуна_други("Эх ящер проклятый, хотел гневить меня?\n");
+        }
+
+        воздать число1 / число2;
+    }
+
+    куль_куль::операция получитьОперацию(буква операция) {
+        путевой_камень (операция) {
+            путь '+':
+                воздать добавляйка;
+            путь '-':
+                воздать отнимайка;
+            путь '*':
+                воздать умножайка;
+            путь '/':
+                воздать поделика;
+            базированно:
+                получи_басурман Русь::гнев_Перуна_други("Не знаю таких");
+        }
+    }
+
+    куль_куль::операция получитьОперацию(много_букав_увидеть строченька) {
+        покуда (правда) {
+            приказ_княжий буква буковка{просьба::получитьБукву(строченька)};
+
+            пытать_ящера {
+                воздать куль_куль::получитьОперацию(буковка);
+            } поймать_ящера (Русь::гнев_Перуна_други ящер) {
+                Русь::молвить << ящер.what() << "\n";
+            }
+        }
+    }
+}
+
+хутор просьба {
+    много_букав получитьСтроченьку(много_букав_увидеть молва) {
+        Русь::молвить << молва;
+        много_букав строченька{};
+        зачерпнуть(Русь::внемлить >> Русь::чисто, строченька);
+        воздать строченька;
+    }
+
+    вель_дробь получитьВель_дробь(много_букав_увидеть строченька) {
+        покуда (правда) {
+            приказ_княжий много_букав строча{получитьСтроченьку(строченька)};
+
+            пытать_ящера {
+                воздать stod(строча);
+            } поймать_ящера (Русь::гнев_Перуна ящер) {
+                Русь::молвить << "Не понятно: " << строча << "\n";
             }
         }
     }
 
-    char getChar(std::string_view message) {
-        return getString(message)[0];
+    буква получитьБукву(много_букав_увидеть строченька) {
+        воздать получитьСтроченьку(строченька)[ноль];
     }
 }
