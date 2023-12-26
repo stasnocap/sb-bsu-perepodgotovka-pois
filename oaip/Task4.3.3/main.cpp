@@ -66,7 +66,7 @@ namespace input {
             try {
                 return std::stod(input);
             } catch (std::exception exception) {
-                std::cout << "Can't parse to number: " << input << "\n";
+                std::cout << "Can't parse to number: " << input << "\r\n";
             }
         }
     }
