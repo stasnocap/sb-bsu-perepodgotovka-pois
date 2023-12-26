@@ -44,6 +44,7 @@ int main() {
 
         std::stringstream message{};
         message << "\r\nEnter number " << i << " (" << conditionPtr->message << "):";
+        
         input::getDouble(message.str(), conditionPtr->value);
     }
 
