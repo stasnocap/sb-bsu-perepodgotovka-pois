@@ -5,7 +5,7 @@
 #include <sstream>
 
 namespace input {
-    typedef bool (*condition_t)(int number);
+    typedef bool (*condition_t)(double number);
 
     std::string getString(std::string_view message);
 
@@ -22,12 +22,13 @@ struct Condition {
 };
 
 int main() {
-    constexpr Condition positiveCondition{1, 5, "positive", [](int number) -> bool { return number > 0; }};
-    constexpr Condition negativeCondition{6, 10, "negative", [](int number) -> bool { return number < 0; }};
+    constexpr Condition positiveCondition{1, 5, "positive", [](double number) -> bool { return number > 0; }};
+    constexpr Condition negativeCondition{6, 10, "negative", [](double number) -> bool { return number < 0; }};
     constexpr Condition fromTenToHundredCondition{11, 15, "10 < x < 100",
-                                                  [](int number) -> bool { return number > 10 && number < 100; }};
-    constexpr Condition evenCondition{16, 20, "even", [](int number) -> bool { return number % 2 == 0; }};
-    constexpr Condition moreThanHundredCondition{21, 25, "x > 100", [](int number) -> bool { return number > 100; }};
+                                                  [](double number) -> bool { return number > 10 && number < 100; }};
+    constexpr Condition evenCondition{16, 20, "even",
+                                      [](double number) -> bool { return static_cast<int>(number) % 2 == 0; }};
+    constexpr Condition moreThanHundredCondition{21, 25, "x > 100", [](double number) -> bool { return number > 100; }};
 
     std::array<Condition, 5> conditions{
             positiveCondition,
@@ -44,7 +45,7 @@ int main() {
 
         std::stringstream message{};
         message << "\r\nEnter number " << i << " (" << conditionPtr->message << "):";
-        
+
         input::getDouble(message.str(), conditionPtr->value);
     }
 
@@ -65,7 +66,7 @@ namespace input {
 
             try {
                 return std::stod(input);
-            } catch (std::exception exception) {
+            } catch (std::exception &exception) {
                 std::cout << "Can't parse to number: " << input << "\r\n";
             }
         }
@@ -75,7 +76,6 @@ namespace input {
         assert(condition && "Condition is null");
 
         double result{};
-
         do {
             result = getDouble(message);
         } while (!condition(result));
