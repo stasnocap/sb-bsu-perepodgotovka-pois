@@ -2,9 +2,9 @@
 #include <array>
 
 template<typename T, std::size_t Row, std::size_t Col>
-void printArray(std::array<std::array<T, Col>, Row> &array) {
-    for (std::array<T, Col> &row: array) {
-        for (T &col: row) {
+void printArray(const std::array<std::array<T, Col>, Row> &array) {
+    for (const std::array<T, Col> &row: array) {
+        for (const T &col: row) {
             std::cout << col << ' ';
         }
         std::cout << '\n';
