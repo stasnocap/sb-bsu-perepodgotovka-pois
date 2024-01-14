@@ -52,6 +52,10 @@ namespace cgram {
             return entity;
         }
 
+        auto find(auto predicate) {
+            return predicate(m_entities);
+        }
+
         void saveChanges() {
             for (Change<T> &change: m_changeTracker) {
                 switch (change.type) {
@@ -95,23 +99,50 @@ namespace cgram {
             users.saveChanges();
         }
     };
+
+    std::string getString(std::string_view ask) {
+        std::cout << ask;
+        std::string input{};
+        std::getline(std::cin >> std::ws, input);
+        return input;
+    }
+
+    static Database database{};
+
+    void authenticate() {
+        while (true) {
+            std::string userName{getString("Please, login.\nEnter username:")};
+
+            auto user{database.users.find([&](const std::vector<User> &users) {
+                auto entity{std::find_if(users.begin(), users.end(), [&](const User &user) {
+                    return userName == user.userName;
+                })};
+
+                if (entity == users.end()) {
+                    return User{};
+                }
+
+                return *entity;
+            })};
+            
+            if (user.id <= 0) {
+                std::cout << "User with such username was not found\n";
+                continue;
+            }
+
+            std::string password{getString("Enter password:")};
+
+            if (user.password != password) {
+                std::cout << "Password is incorrect\n";
+                continue;
+            }
+
+            break;
+        }
+    }
 }
 
-
 int main() {
-    cgram::Database database{};
-
-    database.users.add({2, "newUser", "123"});
-
-    database.saveChanges();
-
-    database.users.remove({2});
-
-    database.saveChanges();
-
-    database.users.update({1, "newAdmin"});
-
-    database.saveChanges();
-
-    return 0;
+    cgram::authenticate();
+    return EXIT_SUCCESS;
 }
