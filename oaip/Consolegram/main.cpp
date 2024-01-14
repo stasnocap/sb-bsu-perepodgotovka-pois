@@ -52,7 +52,31 @@ namespace cgram {
             return entity;
         }
 
-        friend class Database;
+        void saveChanges() {
+            for (Change<T> &change: m_changeTracker) {
+                switch (change.type) {
+                    case cgram::add:
+                        m_entities.push_back(change.value);
+                        break;
+                    case cgram::remove: {
+                        const auto entity{find(change.value)};
+                        m_entities.erase(entity);
+                    }
+                        break;
+                    case cgram::update: {
+                        const auto entity{find(change.value)};
+                        m_entities.erase(entity);
+                        m_entities.push_back(change.value);
+                    }
+                        break;
+                    case none:
+                    default:
+                        throw std::invalid_argument("Change was not implemented");
+                }
+            }
+
+            m_changeTracker.clear();
+        }
     };
 
     struct User {
@@ -68,34 +92,7 @@ namespace cgram {
                           }};
 
         void saveChanges() {
-            for (Change<User> &change: users.m_changeTracker) {
-                switch (change.type) {
-                    case add:
-                        users.m_entities.push_back(change.value);
-                        break;
-                    case remove: {
-                        const auto user{users.find(change.value)};
-                        users.m_entities.erase(user);
-                    }
-                        break;
-                    case update: {
-                        const auto user{users.find(change.value)};
-                        if (!change.value.userName.empty()) {
-                            user->userName = change.value.userName;
-                        }
-
-                        if (!change.value.password.empty()) {
-                            user->password = change.value.password;
-                        }
-                    }
-                        break;
-                    case none:
-                    default:
-                        throw std::invalid_argument("Change was not implemented");
-                }
-            }
-
-            users.m_changeTracker.clear();
+            users.saveChanges();
         }
     };
 }
