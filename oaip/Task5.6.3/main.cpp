@@ -14,7 +14,7 @@ int main() {
     for (int i = 0; i < arrayOfArray.size(); ++i) {
         const std::array<double, 3> &array = arrayOfArray.at(i);
         const double sum{std::accumulate(array.begin(), array.end(), 0.0)};
-        if (std::accumulate(array.begin(), array.end(), 0) > maxSum) {
+        if (sum > maxSum) {
             maxSum = sum;
             maxSumIndex = i;
         }
