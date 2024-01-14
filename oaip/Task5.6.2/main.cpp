@@ -55,7 +55,7 @@ int main() {
     }
 
     std::size_t maxElements{std::max_element(arrayOfArray.begin(), arrayOfArray.end(),
-                                             [](std::vector<double> first, std::vector<double> second) {
+                                             [](const std::vector<double> &first, const std::vector<double> &second) {
                                                  return first.size() < second.size();
                                              })->size()};
 
@@ -73,8 +73,8 @@ int main() {
     arrayOfArray.push_back(sumRow);
 
     std::cout << std::fixed;
-    for (std::vector<double> &array: arrayOfArray) {
-        for (double &el: array) {
+    for (const std::vector<double> &array: arrayOfArray) {
+        for (const double &el: array) {
             std::cout << std::setprecision(2) << el << std::setw(6);
         }
         std::cout << '\n';
