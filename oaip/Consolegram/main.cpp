@@ -18,13 +18,13 @@ namespace cgram {
     };
 
     template<typename T>
-    class DbSet {
+    class Repository {
     private:
         std::vector<T> m_entities{};
         std::vector<Change<T>> m_changeTracker{};
 
     public:
-        explicit DbSet(const std::vector<T> &entities) : m_entities{entities} {
+        explicit Repository(const std::vector<T> &entities) : m_entities{entities} {
         }
 
         void add(const T &entity) {
@@ -46,7 +46,7 @@ namespace cgram {
 
             if (entity == m_entities.end()) {
                 throw std::invalid_argument(
-                        std::format("User with id({}) was not found", value.id));
+                        std::format("{} with id({}) was not found", typeid(T).name(), value.id));
             }
 
             return entity;
@@ -89,17 +89,6 @@ namespace cgram {
         std::string_view password{};
     };
 
-    class Database {
-    public:
-        DbSet<User> users{{
-                                  {1, "admin", "admin"}
-                          }};
-
-        void saveChanges() {
-            users.saveChanges();
-        }
-    };
-
     std::string getString(std::string_view ask) {
         std::cout << ask;
         std::string input{};
@@ -107,13 +96,15 @@ namespace cgram {
         return input;
     }
 
-    static Database database{};
+    static Repository<User> users{{
+                                          {1, "admin", "admin"}
+                                  }};
 
     void authenticate() {
         while (true) {
             std::string userName{getString("Please, login.\nEnter username:")};
 
-            auto user{database.users.find([&](const std::vector<User> &users) {
+            auto user{users.find([&](const std::vector<User> &users) {
                 auto entity{std::find_if(users.begin(), users.end(), [&](const User &user) {
                     return userName == user.userName;
                 })};
@@ -124,7 +115,7 @@ namespace cgram {
 
                 return *entity;
             })};
-            
+
             if (user.id <= 0) {
                 std::cout << "User with such username was not found\n";
                 continue;
