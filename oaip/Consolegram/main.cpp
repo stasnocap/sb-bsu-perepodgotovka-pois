@@ -1,11 +1,16 @@
 ﻿#include <iostream>
+#include <utility>
 #include <vector>
 #include <algorithm>
 #include <format>
 #include <functional>
 #include <windows.h>
+#include <fstream>
 
 namespace cgram {
+    constexpr int g_max_chat_name_length{30};
+    constexpr int g_max_message_text_length{100};
+
     enum ChangeType {
         none,
         add,
@@ -41,15 +46,108 @@ namespace cgram {
         return filtered;
     }
 
+    class Entity {
+    private:
+        long m_id{};
+
+    public:
+        explicit Entity(long id) : m_id{id} {
+        }
+
+        [[nodiscard]] long getId() const {
+            return m_id;
+        }
+    };
+
+    class User : public Entity {
+    private:
+        std::string m_userName{};
+        std::string m_password{};
+    public:
+        explicit User(long id, std::string userName, std::string password)
+                : Entity(id), m_userName{std::move(userName)}, m_password{std::move(password)} {
+        }
+
+        [[nodiscard]] std::string_view getUserName() const {
+            return m_userName;
+        }
+
+        [[nodiscard]] std::string_view getPassword() const {
+            return m_password;
+        }
+    };
+
+    class Participant : public Entity {
+    private:
+        long m_userId{};
+        long m_chatId{};
+        bool m_canWrite{};
+    public:
+        explicit Participant(long id, long userId, long chatId, bool canWrite)
+                : Entity(id), m_userId{userId}, m_chatId{chatId}, m_canWrite{canWrite} {
+        }
+
+        [[nodiscard]] long getUserId() const {
+            return m_userId;
+        }
+
+        [[nodiscard]] long getChatId() const {
+            return m_chatId;
+        }
+
+        [[nodiscard]] long canWrite() const {
+            return m_canWrite;
+        }
+    };
+
+    class Message : public Entity {
+    private:
+        long m_userId{};
+        long m_chatId{};
+        std::string m_text{};
+    public:
+        explicit Message(long id, long userId, long chatId, std::string text)
+                : Entity(id), m_userId{userId}, m_chatId{chatId}, m_text{std::move(text)} {
+        }
+
+        [[nodiscard]] long getUserId() const {
+            return m_userId;
+        }
+
+        [[nodiscard]] long getChatId() const {
+            return m_chatId;
+        }
+
+        [[nodiscard]] std::string_view getText() const {
+            return m_text;
+        }
+    };
+
+    class Chat : public Entity {
+    private:
+        std::string m_name{};
+    public:
+        explicit Chat(long id, std::string name) : Entity(id), m_name{std::move(name)} {
+        }
+
+        [[nodiscard]] std::string_view getName() const {
+            return m_name;
+        }
+    };
+
     template<typename T>
     class Repository {
     private:
-        std::vector<T> m_entities{};
+        std::vector<T> m_cached_entities{};
         std::vector<Change<T>> m_changeTracker{};
         std::vector<T>::iterator m_end{};
+        std::string_view m_fileName{};
+        std::function<std::vector<T>(std::ifstream &)> m_fileReader{};
 
     public:
-        explicit Repository(const std::vector<T> &entities) : m_entities{entities} {
+        explicit Repository(std::string_view fileName, 
+                            std::function<std::vector<T>(std::ifstream &)> fileReader)
+                : m_fileName{fileName}, m_fileReader{std::move(fileReader)} {
         }
 
         std::vector<T>::iterator &end() {
@@ -85,8 +183,24 @@ namespace cgram {
         }
 
         std::vector<T> &getAll() {
-            m_end = m_entities.end();
-            return m_entities;
+            if (!m_cached_entities.empty()) {
+                return m_cached_entities;
+            }
+
+            std::ifstream fileStream{m_fileName.data()};
+
+            if (!fileStream.is_open()) {
+                throw std::invalid_argument(std::format("The {} cannot be opened!", m_fileName));
+            }
+
+            std::vector<T> entities{m_fileReader(fileStream)};
+
+            fileStream.close();
+
+            m_cached_entities = entities;
+            m_end = m_cached_entities.end();
+
+            return m_cached_entities;
         }
 
         void saveChanges() {
@@ -118,98 +232,27 @@ namespace cgram {
         }
     };
 
-    class Entity {
-    private:
-        long m_id{};
-
-    public:
-        explicit Entity(long id) : m_id{id} {
-        }
-
-        [[nodiscard]] long getId() const {
-            return m_id;
-        }
-    };
-
-    class User : public Entity {
-    private:
-        std::string_view m_userName{};
-        std::string_view m_password{};
-    public:
-        explicit User(long id, std::string_view userName, std::string_view password)
-                : Entity(id), m_userName{userName}, m_password{password} {
-        }
-
-        [[nodiscard]] std::string_view getUserName() const {
-            return m_userName;
-        }
-
-        [[nodiscard]] std::string_view getPassword() const {
-            return m_password;
-        }
-    };
-
-    class Participant : public Entity {
-    private:
-        long m_userId{};
-        long m_chatId{};
-        bool m_canWrite{};
-    public:
-        explicit Participant(long id, long userId, long chatId, bool canWrite)
-                : Entity(id), m_userId{userId}, m_chatId{chatId}, m_canWrite{canWrite} {
-        }
-
-        [[nodiscard]] long getUserId() const {
-            return m_userId;
-        }
-
-        [[nodiscard]] long getChatId() const {
-            return m_chatId;
-        }
-
-        [[nodiscard]] long canWrite() const {
-            return m_canWrite;
-        }
-    };
-    
-    class Message : public Entity {
-    private:
-        long m_userId{};
-        long m_chatId{};
-        std::string_view m_text{};
-    public:
-        explicit Message(long id, long userId, long chatId, std::string_view text)
-                : Entity(id), m_userId{userId}, m_chatId{chatId}, m_text{text} {
-        }
-
-        [[nodiscard]] long getUserId() const {
-            return m_userId;
-        }
-
-        [[nodiscard]] long getChatId() const {
-            return m_chatId;
-        }
-
-        [[nodiscard]] std::string_view getText() const {
-            return m_text;
-        }
-    };
-
-    class Chat : public Entity {
-    private:
-        std::string_view m_name{};
-    public:
-        explicit Chat(long id, std::string_view name) : Entity(id), m_name{name} {
-        }
-
-        [[nodiscard]] std::string_view getName() const {
-            return m_name;
-        }
-    };
-
     class UserRepository : public Repository<User> {
     public:
-        explicit UserRepository(const std::vector<User> &users) : Repository<User>{users} {
+        explicit UserRepository() : Repository<User>{"Users.txt",
+                                                     [](std::ifstream &fileStream) {
+                                                         std::vector<User> users{};
+
+                                                         long id{};
+                                                         std::string userName{};
+                                                         std::string password{};
+
+                                                         while (!fileStream.eof()) {
+                                                             fileStream >> id;
+                                                             fileStream >> userName;
+                                                             fileStream >> password;
+
+                                                             users.emplace_back(id, userName,
+                                                                                password);
+                                                         }
+
+                                                         return users;
+                                                     }} {
         }
 
         std::vector<User>::iterator getByUserName(std::string_view userName) {
@@ -222,8 +265,26 @@ namespace cgram {
 
     class ParticipantRepository : public Repository<Participant> {
     public:
-        explicit ParticipantRepository(const std::vector<Participant> &participants) : Repository<Participant>{
-                participants} {
+        explicit ParticipantRepository() : Repository<Participant>{
+                "Participants.txt", [](std::ifstream &fileStream) {
+                    std::vector<Participant> participants{};
+
+                    long id{};
+                    long userId{};
+                    long chatId{};
+                    std::string canWrite{};
+
+                    while (!fileStream.eof()) {
+                        fileStream >> id;
+                        fileStream >> userId;
+                        fileStream >> chatId;
+                        fileStream >> canWrite;
+
+                        participants.emplace_back(id, userId, chatId, canWrite == "true");
+                    }
+
+                    return participants;
+                }} {
         }
 
         std::vector<long> getChatsIds(long userId) {
@@ -242,13 +303,51 @@ namespace cgram {
 
     class ChatRepository : public Repository<Chat> {
     public:
-        explicit ChatRepository(const std::vector<Chat> &chats) : Repository<Chat>{chats} {
+        explicit ChatRepository() : Repository<Chat>{"Chats.txt", [](std::ifstream &fileStream) {
+            std::vector<Chat> chats{};
+
+            long id{};
+            char name[g_max_chat_name_length]{};
+
+            while (!fileStream.eof()) {
+                fileStream >> id;
+
+                fileStream.get();
+                fileStream.getline(name, g_max_chat_name_length, '\n');
+
+                chats.emplace_back(id, name);
+            }
+
+            return chats;
+        }} {
         }
     };
 
     class MessageRepository : public Repository<Message> {
     public:
-        explicit MessageRepository(const std::vector<Message> &messages) : Repository<Message>{messages} {
+        explicit MessageRepository() : Repository<Message>{"Messages.txt",
+                                                           [](std::ifstream &fileStream) {
+                                                               std::vector<Message> messages{};
+
+                                                               long id{};
+                                                               long userId{};
+                                                               long chatId{};
+                                                               char text[g_max_message_text_length]{};
+
+                                                               while (!fileStream.eof()) {
+                                                                   fileStream >> id;
+                                                                   fileStream >> userId;
+                                                                   fileStream >> chatId;
+
+                                                                   fileStream.get();
+                                                                   fileStream.getline(text, g_max_message_text_length,
+                                                                                      '\n');
+
+                                                                   messages.emplace_back(id, userId, chatId, text);
+                                                               }
+
+                                                               return messages;
+                                                           }} {
         }
 
         std::vector<Message> getLastMessages(std::vector<long> &chatIds) {
@@ -281,29 +380,13 @@ namespace cgram {
         }
     };
 
-    static UserRepository s_usersRepository{{
-                                                    User{1, "admin", "admin"}
-                                            }};
+    static UserRepository s_usersRepository{};
 
-    static ParticipantRepository s_participantsRepository{{
-                                                                  Participant{1, 1, 1, true},
-                                                                  Participant{2, 1, 2, true},
-                                                          }};
+    static ParticipantRepository s_participantsRepository{};
 
-    static MessageRepository s_messagesRepository{{
-                                                          Message{1, 1, 1, "hi"},
-                                                          Message{2, 1, 1, "hi 2"},
+    static MessageRepository s_messagesRepository{};
 
-                                                          Message{3, 1, 2, "hi 3"},
-                                                          Message{4, 1, 2,
-                                                                  "really really really really really really long message"},
-
-                                                  }};
-
-    static ChatRepository s_chatsRepository{{
-                                                    Chat{1, "first chat"},
-                                                    Chat{2, "second chat"}
-                                            }};
+    static ChatRepository s_chatsRepository{};
 
     std::string getString(std::string_view ask) {
         std::cout << ask;
@@ -356,13 +439,13 @@ namespace cgram {
             return setColor(hConsole, 8);
         }
 
-        std::string_view setPurple(HANDLE hConsole) {
+        std::string_view setPurpleColor(HANDLE hConsole) {
             return setColor(hConsole, 5);
         }
     }
 
     static std::string_view s_chatSeparator{"------------------------------------\n"};
-    
+
     void showHomePage(const User *user) {
         std::vector<long> chatIds{s_participantsRepository.getChatsIds(user->getId())};
         std::vector<Chat> chats{s_chatsRepository.get(chatIds)};
@@ -383,9 +466,10 @@ namespace cgram {
             if (message != s_messagesRepository.end()) {
 
                 std::cout
-                        << view::setGrayColor(hConsole) << '-' << view::setPurple(hConsole) << chat.getId()
+                        << view::setGrayColor(hConsole) << '-' << view::setPurpleColor(hConsole) << chat.getId()
                         << view::setGrayColor(hConsole) << "- "
-                        << view::setDarkYellowColor(hConsole) << message->getText().substr(0, s_chatSeparator.size() - 5) << '\n'
+                        << view::setDarkYellowColor(hConsole)
+                        << message->getText().substr(0, s_chatSeparator.size() - 5) << '\n'
                         << view::setGrayColor(hConsole);
             }
         }
