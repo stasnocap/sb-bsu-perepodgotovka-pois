@@ -145,7 +145,7 @@ namespace cgram {
         std::function<std::vector<T>(std::ifstream &)> m_fileReader{};
 
     public:
-        explicit Repository(std::string_view fileName, 
+        explicit Repository(std::string_view fileName,
                             std::function<std::vector<T>(std::ifstream &)> fileReader)
                 : m_fileName{fileName}, m_fileReader{std::move(fileReader)} {
         }
@@ -166,7 +166,7 @@ namespace cgram {
             m_changeTracker.push_back({cgram::update, entity});
         }
 
-        std::vector<T>::iterator get(long id) {
+        auto get(long id) {
             const std::vector<T> &entities{getAll()};
             return std::find_if(entities.begin(), entities.end(), [&id](const T &item) {
                 return item.getId() == id;
@@ -207,17 +207,41 @@ namespace cgram {
             std::vector<T> &entities{getAll()};
 
             for (Change<T> &change: m_changeTracker) {
+                if (change.value.getId() < 1){
+                    throw std::invalid_argument("Id can't be zero or below");
+                }
+                
                 switch (change.type) {
                     case cgram::add:
-                        entities.push_back(change.value.getId());
+                        if (std::any_of(entities.begin(), entities.end(), [&change](const T &item) {
+                            return change.value.getId() == item.getId();
+                        })) {
+                            throw std::invalid_argument(std::format("{} with id({}) already exists",
+                                                                    typeid(T).name(),
+                                                                    change.value.getId()));
+                        }
+
+                        entities.push_back(change.value);
                         break;
                     case cgram::remove: {
-                        const auto entity{find(change.value.getId())};
+                        const auto entity{get(change.value.getId())};
+                        if (entity == entities.end()) {
+                            throw std::invalid_argument(std::format("{} with id({}) was not found",
+                                                                    typeid(T).name(),
+                                                                    change.value.getId()));
+                        }
+
                         entities.erase(entity);
                     }
                         break;
                     case cgram::update: {
-                        const auto entity{find(change.value.getId())};
+                        const auto entity{get(change.value.getId())};
+                        if (entity == entities.end()) {
+                            throw std::invalid_argument(std::format("{} with id({}) was not found",
+                                                                    typeid(T).name(),
+                                                                    change.value.getId()));
+                        }
+
                         entities.erase(entity);
                         entities.push_back(change.value);
                     }
