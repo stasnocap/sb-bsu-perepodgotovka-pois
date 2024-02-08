@@ -351,7 +351,7 @@ namespace cgram
                 {
                     throw std::invalid_argument(std::format("The {} cannot be opened!", appsettings_file_name));
                 }
-                
+
                 return;
             }
 
@@ -380,6 +380,35 @@ namespace cgram
             }
         }
 
+        std::string get_environment(const int argc, char* argv[])
+        {
+            std::string environment{};
+            for (int i = 1; i < argc; ++i)
+            {
+                const std::string lower_arg{common::to_lower(argv[i])};
+                if (lower_arg == environment_key && i + 1 < argc)
+                {
+                    const std::string next_lower_arg{common::to_lower(argv[i + 1])};
+                    if (next_lower_arg == production_environment)
+                    {
+                        environment = production_environment;
+                        is_development_ = false;
+                        is_production_ = true;
+                        break;
+                    }
+                }
+            }
+
+            if (environment.empty())
+            {
+                environment = development_environment;
+                is_development_ = true;
+                is_production_ = false;
+            }
+
+            return environment;
+        }
+
     public:
         std::string operator[](const std::string& key) const
         {
@@ -398,42 +427,8 @@ namespace cgram
 
         void init(const int argc, char* argv[])
         {
-            if (argc < 2)
-            {
-                throw std::invalid_argument("Please specify environment(--environment development/production)");
-            }
-
-            std::string environment{};
-            for (int i = 1; i < argc; ++i)
-            {
-                const std::string lower_arg{common::to_lower(argv[i])};
-                if (lower_arg == environment_key && i + 1 < argc)
-                {
-                    const std::string next_lower_arg{common::to_lower(argv[i + 1])};
-                    if (next_lower_arg == development_environment)
-                    {
-                        environment = development_environment;
-                        is_development_ = true;
-                        is_production_ = false;
-                        break;
-                    }
-                    if (next_lower_arg == production_environment)
-                    {
-                        environment = production_environment;
-                        is_development_ = false;
-                        is_production_ = true;
-                        break;
-                    }
-                }
-            }
-
-            if (environment.empty())
-            {
-                environment = development_environment;
-            }
-
+            std::string environment(get_environment(argc, argv));
             environment[0] = static_cast<char>(std::toupper(environment[0]));
-
             read_settings(std::format("{}.txt", appsettings_file_name_without_extension), true);
             read_settings(std::format("{}.{}.txt", appsettings_file_name_without_extension, environment), false);
         }
@@ -653,7 +648,7 @@ namespace cgram
         }
     }
 
-    namespace view
+    namespace cview
     {
         std::string_view set_color(const HANDLE h_console, const WORD w_attributes)
         {
@@ -710,21 +705,21 @@ namespace cgram
             };
 
             std::cout
-                << view::set_gray_color(h_console) << chat_separator << "--- "
-                << view::set_blue_color(h_console) << chat.get_name() << '\n';
+                << cview::set_gray_color(h_console) << chat_separator << "--- "
+                << cview::set_blue_color(h_console) << chat.get_name() << '\n';
 
             if (msg != messages.end())
             {
                 std::cout
-                    << view::set_gray_color(h_console) << '-'
-                    << view::set_purple_color(h_console) << chat.get_id()
-                    << view::set_gray_color(h_console) << "- "
-                    << view::set_dark_yellow_color(h_console)
+                    << cview::set_gray_color(h_console) << '-'
+                    << cview::set_purple_color(h_console) << chat.get_id()
+                    << cview::set_gray_color(h_console) << "- "
+                    << cview::set_dark_yellow_color(h_console)
                     << msg->get_text().substr(0, chat_separator.size() - 5) << '\n';
             }
         }
 
-        std::cout << view::set_gray_color(h_console) << chat_separator;
+        std::cout << cview::set_gray_color(h_console) << chat_separator;
     }
 }
 
