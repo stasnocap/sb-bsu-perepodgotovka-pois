@@ -1,0 +1,4 @@
+﻿UsersFileRelativePath=../../data/Users.txt
+ParticipantsFileRelativePath=../../data/Participants.txt
+ChatsFileRelativePath=../../data/Chats.txt
+MessagesFileRelativePath=../../data/Messages.txt

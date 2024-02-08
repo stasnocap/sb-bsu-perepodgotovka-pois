@@ -6,14 +6,22 @@
 #include <functional>
 #include <windows.h>
 #include <fstream>
+#include <map>
+#include <sstream>
 #include <string>
 
 namespace cgram
 {
-    constexpr int g_max_chat_name_length{30};
-    constexpr int g_max_message_text_length{100};
+    constexpr std::string_view environment_key{"--environment"};
+    constexpr std::string_view development_environment{"development"};
+    constexpr std::string_view production_environment{"production"};
+    constexpr std::string_view appsettings_file_name_without_extension{"appsettings"};
+    constexpr std::string_view chat_separator{"------------------------------------\n"};
 
-    enum ChangeType
+    constexpr int max_chat_name_length{30};
+    constexpr int max_message_text_length{100};
+
+    enum change_type
     {
         none,
         add,
@@ -22,9 +30,9 @@ namespace cgram
     };
 
     template <typename T>
-    struct Change
+    struct change
     {
-        ChangeType type{};
+        change_type type{};
         T value{};
     };
 
@@ -55,159 +63,153 @@ namespace cgram
         return filtered;
     }
 
-    class Entity
+    class entity
     {
-    private:
-        long m_id{};
+        long id_{};
 
     public:
-        explicit Entity(long id) : m_id{id}
+        explicit entity(const long id) : id_{id}
         {
         }
 
-        [[nodiscard]] long getId() const
+        long get_id() const
         {
-            return m_id;
+            return id_;
         }
     };
 
-    class User : public Entity
+    class user : public entity
     {
-    private:
-        std::string m_userName{};
-        std::string m_password{};
+        std::string name_{};
+        std::string password_{};
 
     public:
-        explicit User(long id, std::string userName, std::string password)
-            : Entity(id), m_userName{std::move(userName)}, m_password{std::move(password)}
+        explicit user(const long id, std::string user_name, std::string password)
+            : entity(id), name_{std::move(user_name)}, password_{std::move(password)}
         {
         }
 
-        [[nodiscard]] std::string_view getUserName() const
+        [[nodiscard]] std::string_view get_user_name() const
         {
-            return m_userName;
+            return name_;
         }
 
-        [[nodiscard]] std::string_view getPassword() const
+        [[nodiscard]] std::string_view get_password() const
         {
-            return m_password;
+            return password_;
         }
     };
 
-    class Participant : public Entity
+    class participant : public entity
     {
-    private:
-        long m_userId{};
-        long m_chatId{};
-        bool m_canWrite{};
+        long user_id_{};
+        long chat_id_{};
+        bool can_write_{};
 
     public:
-        explicit Participant(long id, long userId, long chatId, bool canWrite)
-            : Entity(id), m_userId{userId}, m_chatId{chatId}, m_canWrite{canWrite}
+        explicit participant(const long id, const long user_id, const long chat_id, const bool can_write)
+            : entity(id), user_id_{user_id}, chat_id_{chat_id}, can_write_{can_write}
         {
         }
 
-        [[nodiscard]] long getUserId() const
+        [[nodiscard]] long get_user_id() const
         {
-            return m_userId;
+            return user_id_;
         }
 
-        [[nodiscard]] long getChatId() const
+        [[nodiscard]] long get_chat_id() const
         {
-            return m_chatId;
+            return chat_id_;
         }
 
-        [[nodiscard]] long canWrite() const
+        [[nodiscard]] long can_write() const
         {
-            return m_canWrite;
+            return can_write_;
         }
     };
 
-    class Message : public Entity
+    class message : public entity
     {
-    private:
-        long m_userId{};
-        long m_chatId{};
-        std::string m_text{};
+        long user_id_{};
+        long chat_id_{};
+        std::string text_{};
 
     public:
-        explicit Message(long id, long userId, long chatId, std::string text)
-            : Entity(id), m_userId{userId}, m_chatId{chatId}, m_text{std::move(text)}
+        explicit message(const long id, const long user_id, const long chat_id, std::string text)
+            : entity(id), user_id_{user_id}, chat_id_{chat_id}, text_{std::move(text)}
         {
         }
 
-        [[nodiscard]] long getUserId() const
+        [[nodiscard]] long get_user_id() const
         {
-            return m_userId;
+            return user_id_;
         }
 
-        [[nodiscard]] long getChatId() const
+        [[nodiscard]] long get_chat_id() const
         {
-            return m_chatId;
+            return chat_id_;
         }
 
-        [[nodiscard]] std::string_view getText() const
+        [[nodiscard]] std::string_view get_text() const
         {
-            return m_text;
+            return text_;
         }
     };
 
-    class Chat : public Entity
+    class chat : public entity
     {
-    private:
-        std::string m_name{};
+        std::string name_{};
 
     public:
-        explicit Chat(long id, std::string name) : Entity(id), m_name{std::move(name)}
+        explicit chat(const long id, std::string name) : entity(id), name_{std::move(name)}
         {
         }
 
-        [[nodiscard]] std::string_view getName() const
+        [[nodiscard]] std::string_view get_name() const
         {
-            return m_name;
+            return name_;
         }
     };
 
     template <typename T>
-    class Repository
+    class repository
     {
-    private:
-        std::vector<T> m_cached_entities{};
-        std::vector<Change<T>> m_changeTracker{};
-        typename std::vector<T>::iterator m_end{};
-        std::string_view m_fileName{};
-        std::function<std::vector<T>(std::ifstream&)> m_fileReader{};
+        std::vector<T> cached_entities_{};
+        std::vector<change<T>> change_tracker_{};
+        typename std::vector<T>::iterator end_{};
+        std::string file_name_{};
+        std::function<std::vector<T>(std::ifstream&)> file_reader_{};
 
     public:
-        explicit Repository(std::string_view fileName,
-                            std::function<std::vector<T>(std::ifstream&)> fileReader)
-            : m_fileName{fileName}, m_fileReader{std::move(fileReader)}
+        explicit repository(std::string file_name,
+                            std::function<std::vector<T>(std::ifstream&)> file_reader)
+            : file_name_{std::move(file_name)}, file_reader_{std::move(file_reader)}
         {
         }
 
         typename std::vector<T>::iterator end()
         {
-            return m_end;
+            return end_;
         }
 
         void add(const T& entity)
         {
-            m_changeTracker.push_back({cgram::add, entity});
+            change_tracker_.push_back({cgram::add, entity});
         }
 
         void remove(const T& entity)
         {
-            m_changeTracker.push_back({cgram::remove, entity});
+            change_tracker_.push_back({cgram::remove, entity});
         }
 
         void update(const T& entity)
         {
-            m_changeTracker.push_back({cgram::update, entity});
+            change_tracker_.push_back({cgram::update, entity});
         }
 
-        auto get(long id)
+        auto get(long id) const
         {
-            const std::vector<T>& entities{getAll()};
+            const std::vector<T>& entities{get_all()};
             return std::find_if(entities.begin(), entities.end(), [&id](const T& item)
             {
                 return item.getId() == id;
@@ -216,47 +218,47 @@ namespace cgram
 
         std::vector<T> get(std::vector<long>& ids)
         {
-            const std::vector<T>& entities{getAll()};
+            const std::vector<T>& entities{get_all()};
             return where<T>(entities, [&ids](const T& entity)
             {
                 return std::any_of(ids.begin(), ids.end(), [&entity](long id)
                 {
-                    return entity.getId() == id;
+                    return entity.get_id() == id;
                 });
             });
         }
 
-        std::vector<T>& getAll()
+        std::vector<T>& get_all()
         {
-            if (!m_cached_entities.empty())
+            if (!cached_entities_.empty())
             {
-                return m_cached_entities;
+                return cached_entities_;
             }
 
-            std::ifstream fileStream{m_fileName.data()};
+            std::ifstream file_stream{file_name_.data()};
 
-            if (!fileStream.is_open())
+            if (!file_stream.is_open())
             {
-                throw std::invalid_argument(std::format("The {} cannot be opened!", m_fileName));
+                throw std::invalid_argument(std::format("The {} cannot be opened!", file_name_));
             }
 
-            std::vector<T> entities{m_fileReader(fileStream)};
+            std::vector<T> entities{file_reader_(file_stream)};
 
-            fileStream.close();
+            file_stream.close();
 
-            m_cached_entities = entities;
-            m_end = m_cached_entities.end();
+            cached_entities_ = entities;
+            end_ = cached_entities_.end();
 
-            return m_cached_entities;
+            return cached_entities_;
         }
 
-        void saveChanges()
+        void save_changes()
         {
-            std::vector<T>& entities{getAll()};
+            std::vector<T>& entities{get_all()};
 
-            for (Change<T>& change : m_changeTracker)
+            for (change<T>& change : change_tracker_)
             {
-                if (change.value.getId() < 1)
+                if (change.value.get_id() < 1)
                 {
                     throw std::invalid_argument("Id can't be zero or below");
                 }
@@ -309,30 +311,154 @@ namespace cgram
                 }
             }
 
-            m_changeTracker.clear();
+            change_tracker_.clear();
         }
     };
 
-    class UserRepository : public Repository<User>
+    namespace common
+    {
+        std::string get_string(const std::string_view ask)
+        {
+            std::cout << ask;
+            std::string input{};
+            std::getline(std::cin >> std::ws, input);
+            return input;
+        }
+
+        template <typename T>
+        std::string to_lower(T& data)
+        {
+            std::string lower{data};
+            std::transform(lower.begin(), lower.end(), lower.begin(),
+                           [](const unsigned char c) { return std::tolower(c); });
+            return lower;
+        }
+    }
+
+    class config
+    {
+        std::map<std::string, std::string> settings_{};
+        bool is_development_{};
+        bool is_production_{};
+
+        void read_settings(std::string_view appsettings_file_name, bool isRequired)
+        {
+            std::ifstream i_file_stream(appsettings_file_name.data());
+
+            if (!i_file_stream.is_open())
+            {
+                if (isRequired)
+                {
+                    throw std::invalid_argument(std::format("The {} cannot be opened!", appsettings_file_name));
+                }
+                
+                return;
+            }
+
+            i_file_stream.get();
+            i_file_stream.get();
+            i_file_stream.get();
+
+            std::string line{};
+            while (std::getline(i_file_stream, line))
+            {
+                std::istringstream i_string_stream(line);
+
+                std::string key{};
+                if (!std::getline(i_string_stream, key, '='))
+                {
+                    break;
+                }
+
+                std::string value{};
+                if (!std::getline(i_string_stream, value))
+                {
+                    break;
+                }
+
+                settings_[key] = value;
+            }
+        }
+
+    public:
+        std::string operator[](const std::string& key) const
+        {
+            return settings_.at(key);
+        }
+
+        [[nodiscard]] bool isDevelopment() const
+        {
+            return is_development_;
+        }
+
+        [[nodiscard]] bool isProduction() const
+        {
+            return is_production_;
+        }
+
+        void init(const int argc, char* argv[])
+        {
+            if (argc < 2)
+            {
+                throw std::invalid_argument("Please specify environment(--environment development/production)");
+            }
+
+            std::string environment{};
+            for (int i = 1; i < argc; ++i)
+            {
+                const std::string lower_arg{common::to_lower(argv[i])};
+                if (lower_arg == environment_key && i + 1 < argc)
+                {
+                    const std::string next_lower_arg{common::to_lower(argv[i + 1])};
+                    if (next_lower_arg == development_environment)
+                    {
+                        environment = development_environment;
+                        is_development_ = true;
+                        is_production_ = false;
+                        break;
+                    }
+                    if (next_lower_arg == production_environment)
+                    {
+                        environment = production_environment;
+                        is_development_ = false;
+                        is_production_ = true;
+                        break;
+                    }
+                }
+            }
+
+            if (environment.empty())
+            {
+                environment = development_environment;
+            }
+
+            environment[0] = static_cast<char>(std::toupper(environment[0]));
+
+            read_settings(std::format("{}.txt", appsettings_file_name_without_extension), true);
+            read_settings(std::format("{}.{}.txt", appsettings_file_name_without_extension, environment), false);
+        }
+    };
+
+    class user_repository : public repository<user>
     {
     public:
-        explicit UserRepository() : Repository<User>{
-            "../../data/Users.txt",
-            [](std::ifstream& fileStream)
+        explicit user_repository(const config& config) : repository{
+            config["UsersFileRelativePath"],
+            [](std::ifstream& file_stream)
             {
-                std::vector<User> users{};
+                std::vector<user> users{};
 
                 long id{};
-                std::string userName{};
+                std::string user_name{};
                 std::string password{};
 
-                while (!fileStream.eof())
+                while (!file_stream.eof())
                 {
-                    fileStream >> id;
-                    fileStream >> userName;
-                    fileStream >> password;
+                    file_stream >> id;
+                    file_stream >> user_name;
+                    file_stream >> password;
 
-                    users.emplace_back(id, userName,
+                    users.emplace_back(id, user_name,
                                        password);
                 }
 
@@ -340,39 +466,40 @@ namespace cgram
             }
         }
         {
+            auto m{config["UsersFileRelativePath"]};
         }
 
-        std::vector<User>::iterator getByUserName(std::string_view userName)
+        std::vector<user>::iterator get_by_user_name(std::string_view user_name)
         {
-            std::vector<User>& entities{getAll()};
-            return std::ranges::find_if(entities, [userName](const User& item)
+            std::vector<user>& entities{get_all()};
+            return std::ranges::find_if(entities, [user_name](const user& item)
             {
-                return item.getUserName() == userName;
+                return item.get_user_name() == user_name;
             });
         }
     };
 
-    class ParticipantRepository : public Repository<Participant>
+    class participant_repository : public repository<participant>
     {
     public:
-        explicit ParticipantRepository() : Repository<Participant>{
-            "../../data/Participants.txt", [](std::ifstream& fileStream)
+        explicit participant_repository(const config& config) : repository{
+            config["ParticipantsFileRelativePath"], [](std::ifstream& fileStream)
             {
-                std::vector<Participant> participants{};
+                std::vector<participant> participants{};
 
                 long id{};
-                long userId{};
-                long chatId{};
+                long user_id{};
+                long chat_id{};
                 std::string canWrite{};
 
                 while (!fileStream.eof())
                 {
                     fileStream >> id;
-                    fileStream >> userId;
-                    fileStream >> chatId;
+                    fileStream >> user_id;
+                    fileStream >> chat_id;
                     fileStream >> canWrite;
 
-                    participants.emplace_back(id, userId, chatId, canWrite == "true");
+                    participants.emplace_back(id, user_id, chat_id, canWrite == "true");
                 }
 
                 return participants;
@@ -381,41 +508,41 @@ namespace cgram
         {
         }
 
-        std::vector<long> getChatsIds(long userId)
+        std::vector<long> get_chats_ids(long user_id)
         {
-            const std::vector<Participant>& participants{getAll()};
+            const std::vector<participant>& participants{get_all()};
 
-            const std::vector<Participant> filteredByUserId{
-                where<Participant>(participants, [userId](const Participant& participant)
+            const std::vector filtered_by_user_id{
+                where<participant>(participants, [user_id](const participant& participant)
                 {
-                    return participant.getUserId() == userId;
+                    return participant.get_user_id() == user_id;
                 })
             };
 
-            return select<Participant, long>(filteredByUserId, [](const Participant& participant)
+            return select<participant, long>(filtered_by_user_id, [](const participant& participant)
             {
-                return participant.getChatId();
+                return participant.get_chat_id();
             });
         }
     };
 
-    class ChatRepository : public Repository<Chat>
+    class chat_repository : public repository<chat>
     {
     public:
-        explicit ChatRepository() : Repository<Chat>{
-            "../../data/Chats.txt", [](std::ifstream& fileStream)
+        explicit chat_repository(const config& config) : repository{
+            config["ChatsFileRelativePath"], [](std::ifstream& file_stream)
             {
-                std::vector<Chat> chats{};
+                std::vector<chat> chats{};
 
                 long id{};
-                char name[g_max_chat_name_length]{};
+                char name[max_chat_name_length]{};
 
-                while (!fileStream.eof())
+                while (!file_stream.eof())
                 {
-                    fileStream >> id;
+                    file_stream >> id;
 
-                    fileStream.get();
-                    fileStream.getline(name, g_max_chat_name_length, '\n');
+                    file_stream.get();
+                    file_stream.getline(name, max_chat_name_length, '\n');
 
                     chats.emplace_back(id, name);
                 }
@@ -427,31 +554,31 @@ namespace cgram
         }
     };
 
-    class MessageRepository : public Repository<Message>
+    class message_repository : public repository<message>
     {
     public:
-        explicit MessageRepository() : Repository<Message>{
-            "../../data/Messages.txt",
-            [](std::ifstream& fileStream)
+        explicit message_repository(const config& config) : repository{
+            config["MessagesFileRelativePath"],
+            [](std::ifstream& file_stream)
             {
-                std::vector<Message> messages{};
+                std::vector<message> messages{};
 
                 long id{};
-                long userId{};
-                long chatId{};
-                char text[g_max_message_text_length]{};
+                long user_id{};
+                long chat_id{};
+                char text[max_message_text_length]{};
 
-                while (!fileStream.eof())
+                while (!file_stream.eof())
                 {
-                    fileStream >> id;
-                    fileStream >> userId;
-                    fileStream >> chatId;
+                    file_stream >> id;
+                    file_stream >> user_id;
+                    file_stream >> chat_id;
 
-                    fileStream.get();
-                    fileStream.getline(text, g_max_message_text_length,
-                                       '\n');
+                    file_stream.get();
+                    file_stream.getline(text, max_message_text_length,
+                                        '\n');
 
-                    messages.emplace_back(id, userId, chatId, text);
+                    messages.emplace_back(id, user_id, chat_id, text);
                 }
 
                 return messages;
@@ -460,86 +587,63 @@ namespace cgram
         {
         }
 
-        std::vector<Message> getLastMessages(std::vector<long>& chatIds)
+        std::vector<message> get_last_messages(std::vector<long>& chat_ids)
         {
-            const std::vector<Message>& messages{getAll()};
+            const std::vector<message>& messages{get_all()};
 
-            const std::vector filteredByChatIds{
-                where<Message>(messages, [&chatIds](const Message& message)
+            const std::vector filtered_by_chat_ids{
+                where<message>(messages, [&chat_ids](const message& message)
                 {
-                    return std::ranges::any_of(chatIds, [&message](long chatId)
+                    return std::ranges::any_of(chat_ids, [&message](const long chat_id)
                     {
-                        return message.getChatId() == chatId;
+                        return message.get_chat_id() == chat_id;
                     });
                 })
             };
 
-            std::vector<Message> lastMessages{};
-            for (const Message& message : filteredByChatIds)
+            std::vector<message> last_messages{};
+            for (const message& msg : filtered_by_chat_ids)
             {
-                const std::vector filteredByChatId{
-                    where<Message>(filteredByChatIds, [&message](const Message& item)
+                const std::vector filtered_by_chat_id{
+                    where<message>(filtered_by_chat_ids, [&msg](const message& item)
                     {
-                        return item.getChatId() == message.getChatId();
+                        return msg.get_chat_id() == item.get_chat_id();
                     })
                 };
 
-                const Message& maxIdMessage{
-                    *std::ranges::max_element(filteredByChatId,
-                                              [](const Message& first, const Message& second)
+                if (const message& max_id_message{
+                    *std::ranges::max_element(filtered_by_chat_id,
+                                              [](const message& first, const message& second)
                                               {
-                                                  return first.getId() < second.getId();
+                                                  return first.get_id() < second.get_id();
                                               })
-                };
-
-                if (maxIdMessage.getId() > message.getId())
+                }; max_id_message.get_id() > msg.get_id())
                 {
-                    lastMessages.push_back(maxIdMessage);
+                    last_messages.push_back(max_id_message);
                 }
             }
 
-            return lastMessages;
+            return last_messages;
         }
     };
 
-    namespace 
-    {
-        UserRepository s_usersRepository{};
-
-        ParticipantRepository s_participantsRepository{};
-
-        MessageRepository s_messagesRepository{};
-
-        ChatRepository s_chatsRepository{};
-        
-        std::string_view s_chatSeparator{"------------------------------------\n"};
-    }
-    
-    std::string getString(std::string_view ask)
-    {
-        std::cout << ask;
-        std::string input{};
-        std::getline(std::cin >> std::ws, input);
-        return input;
-    }
-
-    User* authenticate()
+    user* authenticate(user_repository& users_repository)
     {
         while (true)
         {
-            const std::string userName{getString("Please, login.\nEnter username:")};
+            const std::string user_name{common::get_string("Please, login.\nEnter username:")};
 
-            const std::vector<User>::iterator user{s_usersRepository.getByUserName(userName)};
+            const auto user{users_repository.get_by_user_name(user_name)};
 
-            if (user == s_usersRepository.end())
+            if (user == users_repository.end())
             {
                 std::cout << "User with such username was not found\n";
                 continue;
             }
 
-            const std::string password{getString("Enter password:")};
+            const std::string password{common::get_string("Enter password:")};
 
-            if (user->getPassword() != password)
+            if (user->get_password() != password)
             {
                 std::cout << "Password is incorrect\n";
                 continue;
@@ -551,77 +655,90 @@ namespace cgram
 
     namespace view
     {
-        std::string_view setColor(HANDLE hConsole, WORD wAttributes)
+        std::string_view set_color(const HANDLE h_console, const WORD w_attributes)
         {
-            SetConsoleTextAttribute(hConsole, wAttributes);
+            SetConsoleTextAttribute(h_console, w_attributes);
             return "";
         }
 
-        std::string_view setBlueColor(HANDLE hConsole)
+        std::string_view set_blue_color(const HANDLE h_console)
         {
-            return setColor(hConsole, 1);
+            return set_color(h_console, 1);
         }
 
-        std::string_view setBlackColor(HANDLE hConsole)
+        std::string_view set_black_color(const HANDLE h_console)
         {
-            return setColor(hConsole, 0);
+            return set_color(h_console, 0);
         }
 
-        std::string_view setDarkYellowColor(HANDLE hConsole)
+        std::string_view set_dark_yellow_color(const HANDLE h_console)
         {
-            return setColor(hConsole, 6);
+            return set_color(h_console, 6);
         }
 
-        std::string_view setGrayColor(HANDLE hConsole)
+        std::string_view set_gray_color(const HANDLE h_console)
         {
-            return setColor(hConsole, 8);
+            return set_color(h_console, 8);
         }
 
-        std::string_view setPurpleColor(HANDLE hConsole)
+        std::string_view set_purple_color(const HANDLE h_console)
         {
-            return setColor(hConsole, 5);
+            return set_color(h_console, 5);
         }
     }
-    
-    void showHomePage(const User* user)
+
+    void show_home_page(
+        const user* user,
+        participant_repository& participant_repository,
+        chat_repository& chat_repository,
+        message_repository& message_repository
+    )
     {
-        std::vector chatIds{s_participantsRepository.getChatsIds(user->getId())};
-        const std::vector chats{s_chatsRepository.get(chatIds)};
-        std::vector messages{s_messagesRepository.getLastMessages(chatIds)};
+        std::vector chat_ids{participant_repository.get_chats_ids(user->get_id())};
+        const std::vector chats{chat_repository.get(chat_ids)};
+        std::vector messages{message_repository.get_last_messages(chat_ids)};
 
-        const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        const HANDLE h_console = GetStdHandle(STD_OUTPUT_HANDLE);
 
-        for (const Chat& chat : chats)
+        for (const chat& chat : chats)
         {
-            std::vector<Message>::iterator message{
-                std::ranges::find_if(messages, [&chat](const Message& item)
+            std::vector<message>::iterator msg{
+                std::ranges::find_if(messages, [&chat](const message& item)
                 {
-                    return chat.getId() == item.getChatId();
+                    return chat.get_id() == item.get_chat_id();
                 })
             };
 
             std::cout
-                << view::setGrayColor(hConsole) << s_chatSeparator
-                << "--- " << view::setBlueColor(hConsole) << chat.getName() << '\n';
+                << view::set_gray_color(h_console) << chat_separator << "--- "
+                << view::set_blue_color(h_console) << chat.get_name() << '\n';
 
-            if (message != messages.end())
+            if (msg != messages.end())
             {
                 std::cout
-                    << view::setGrayColor(hConsole) << '-' << view::setPurpleColor(hConsole) << chat.getId()
-                    << view::setGrayColor(hConsole) << "- "
-                    << view::setDarkYellowColor(hConsole)
-                    << message->getText().substr(0, s_chatSeparator.size() - 5) << '\n'
-                    << view::setGrayColor(hConsole);
+                    << view::set_gray_color(h_console) << '-'
+                    << view::set_purple_color(h_console) << chat.get_id()
+                    << view::set_gray_color(h_console) << "- "
+                    << view::set_dark_yellow_color(h_console)
+                    << msg->get_text().substr(0, chat_separator.size() - 5) << '\n';
             }
         }
 
-        std::cout << s_chatSeparator;
+        std::cout << view::set_gray_color(h_console) << chat_separator;
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    const cgram::User* currentUser{cgram::authenticate()};
-    showHomePage(currentUser);
+    cgram::config config{};
+    config.init(argc, argv);
+
+    cgram::user_repository user_repository{config};
+    cgram::participant_repository participant_repository{config};
+    cgram::message_repository message_repository{config};
+    cgram::chat_repository chat_repository{config};
+
+    const cgram::user* current_user{authenticate(user_repository)};
+    show_home_page(current_user, participant_repository, chat_repository, message_repository);
     return EXIT_SUCCESS;
 }
