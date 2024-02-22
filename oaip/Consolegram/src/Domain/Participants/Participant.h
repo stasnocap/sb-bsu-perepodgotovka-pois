@@ -3,7 +3,7 @@
 
 namespace Consolegram::Domain::Participants
 {
-    class Participant : public SharedKernel::Entity
+    class Participant final : public SharedKernel::Entity
     {
         long _userId{};
         long _chatId{};
@@ -16,6 +16,8 @@ namespace Consolegram::Domain::Participants
 
         [[nodiscard]] long GetChatId() const;
 
-        [[nodiscard]] long CanWrite() const;
+        [[nodiscard]] bool CanWrite() const;
+
+        [[nodiscard]] std::string ToFileString() const override;
     };
 }

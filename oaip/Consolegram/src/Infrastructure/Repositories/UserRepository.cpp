@@ -1,4 +1,4 @@
-#include "../../Domain/Users/UserRepository.h" 
+#include "../../Domain/Users/UserRepository.h"
 
 namespace Consolegram::Domain::Users
 {
@@ -26,7 +26,6 @@ namespace Consolegram::Domain::Users
         }
     }
     {
-        auto m{config["UsersFileRelativePath"]};
     }
 
     std::vector<User>::iterator UserRepository::GetByUserName(std::string_view userName)

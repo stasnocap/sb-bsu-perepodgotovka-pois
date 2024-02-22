@@ -1,5 +1,7 @@
 #include "Participant.h"
 
+#include <sstream>
+
 namespace Consolegram::Domain::Participants
 {
     Participant::Participant(const long id, const long userId, const long chatId, const bool canWrite)
@@ -17,8 +19,21 @@ namespace Consolegram::Domain::Participants
         return _chatId;
     }
 
-    long Participant::CanWrite() const
+    bool Participant::CanWrite() const
     {
         return _canWrite;
+    }
+
+    std::string Participant::ToFileString() const
+    {
+        std::ostringstream oStringStream{};
+        
+        oStringStream
+            << GetId() << '\t'
+            << GetUserId() << '\t'
+            << GetChatId() << '\t'
+            << CanWrite();
+        
+        return oStringStream.str();
     }
 }

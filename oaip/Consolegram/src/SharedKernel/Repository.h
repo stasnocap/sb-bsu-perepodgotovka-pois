@@ -19,11 +19,33 @@ namespace Consolegram::SharedKernel
         std::vector<Change<T>> _changeTracker{};
         typename std::vector<T>::iterator _end{};
         std::string _fileName{};
-        std::function<std::vector<T>(std::ifstream &)> _fileReader{};
+        std::function<std::vector<T>(std::ifstream&)> _fileReader{};
+
+        void SaveToFile()
+        {
+            std::ofstream fileStream{_fileName.data()};
+
+            if (!fileStream.is_open())
+            {
+                throw std::invalid_argument(std::format("The {} cannot be opened!", _fileName));
+            }
+
+            for (size_t i = 0; i < _cachedEntities.size(); ++i)
+            {
+                fileStream << _cachedEntities[i].ToFileString();
+
+                if (i != _cachedEntities.size() - 1)
+                {
+                    fileStream << '\n';
+                }
+            }
+
+            fileStream.close();
+        }
 
     public:
         explicit Repository(std::string fileName,
-                            std::function<std::vector<T>(std::ifstream &)> fileReader)
+                            std::function<std::vector<T>(std::ifstream&)> fileReader)
             : _fileName{std::move(fileName)}, _fileReader{std::move(fileReader)}
         {
         }
@@ -48,12 +70,12 @@ namespace Consolegram::SharedKernel
             _changeTracker.push_back({ChangeType::Update, entity});
         }
 
-        auto Get(long id) const
+        typename std::vector<T>::const_iterator Get(long id)
         {
             const std::vector<T>& entities{GetAll()};
-            return std::find_if(entities.begin(), entities.End(), [&id](const T& item)
+            return std::find_if(entities.begin(), entities.end(), [id](const T& item)
             {
-                return item.getId() == id;
+                return item.GetId() == id;
             });
         }
 
@@ -100,34 +122,34 @@ namespace Consolegram::SharedKernel
 
             for (Change<T>& change : _changeTracker)
             {
-                if (change.value.get_id() < 1)
+                if (change.Value.GetId() < 1)
                 {
                     throw std::invalid_argument("Id can't be zero or below");
                 }
 
-                switch (change.type)
+                switch (change.Type)
                 {
                 case ChangeType::Add:
-                    if (std::any_of(entities.begin(), entities.End(), [&change](const T& item)
+                    if (std::any_of(entities.begin(), entities.end(), [&change](const T& item)
                     {
-                        return change.value.getId() == item.getId();
+                        return change.Value.GetId() == item.GetId();
                     }))
                     {
                         throw std::invalid_argument(std::format("{} with id({}) already exists",
                                                                 typeid(T).name(),
-                                                                change.value.getId()));
+                                                                change.Value.GetId()));
                     }
 
-                    entities.push_back(change.value);
+                    entities.push_back(change.Value);
                     break;
                 case ChangeType::Remove:
                     {
-                        const auto entity{get(change.value.getId())};
-                        if (entity == entities.End())
+                        const auto entity{Get(change.Value.GetId())};
+                        if (entity == entities.end())
                         {
                             throw std::invalid_argument(std::format("{} with id({}) was not found",
                                                                     typeid(T).name(),
-                                                                    change.value.getId()));
+                                                                    change.Value.GetId()));
                         }
 
                         entities.erase(entity);
@@ -135,16 +157,16 @@ namespace Consolegram::SharedKernel
                     break;
                 case ChangeType::Update:
                     {
-                        const auto entity{get(change.value.getId())};
-                        if (entity == entities.End())
+                        const auto entity{Get(change.Value.GetId())};
+                        if (entity == entities.end())
                         {
                             throw std::invalid_argument(std::format("{} with id({}) was not found",
                                                                     typeid(T).name(),
-                                                                    change.value.getId()));
+                                                                    change.Value.GetId()));
                         }
 
                         entities.erase(entity);
-                        entities.push_back(change.value);
+                        entities.push_back(change.Value);
                     }
                     break;
                 case ChangeType::None:
@@ -152,6 +174,8 @@ namespace Consolegram::SharedKernel
                     throw std::invalid_argument("Change was not implemented");
                 }
             }
+
+            SaveToFile();
 
             _changeTracker.clear();
         }

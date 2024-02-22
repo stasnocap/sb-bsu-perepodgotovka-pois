@@ -4,7 +4,7 @@
 
 namespace Consolegram::Domain::Messages
 {
-    class Message : public SharedKernel::Entity
+    class Message final : public SharedKernel::Entity
     {
         long _userId{};
         long _chatId{};
@@ -18,5 +18,7 @@ namespace Consolegram::Domain::Messages
         [[nodiscard]] long GetChatId() const;
 
         [[nodiscard]] std::string_view GetText() const;
+
+        [[nodiscard]] std::string ToFileString() const override;
     };
 }

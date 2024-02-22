@@ -1,4 +1,7 @@
 #include "Message.h"
+
+#include <sstream>
+
 #include "../../SharedKernel/Entity.h"
 
 namespace Consolegram::Domain::Messages
@@ -8,18 +11,31 @@ namespace Consolegram::Domain::Messages
     {
     }
 
-    [[nodiscard]] long Message::GetUserId() const
+    long Message::GetUserId() const
     {
         return _userId;
     }
 
-    [[nodiscard]] long Message::GetChatId() const
+    long Message::GetChatId() const
     {
         return _chatId;
     }
 
-    [[nodiscard]] std::string_view Message::GetText() const
+    std::string_view Message::GetText() const
     {
         return _text;
+    }
+
+    std::string Message::ToFileString() const
+    {
+        std::ostringstream oStringStream{};
+        
+        oStringStream
+            << GetId() << '\t'
+            << GetUserId() << '\t'
+            << GetChatId() << '\t'
+            << GetText();
+        
+        return oStringStream.str();
     }
 }

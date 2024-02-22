@@ -4,7 +4,7 @@
 
 namespace Consolegram::Domain::Chats
 {
-    class Chat : public SharedKernel::Entity
+    class Chat final : public SharedKernel::Entity
     {
         std::string _name{};
 
@@ -12,5 +12,7 @@ namespace Consolegram::Domain::Chats
         explicit Chat(long id, std::string name);
 
         [[nodiscard]] std::string_view GetName() const;
+
+        [[nodiscard]] std::string ToFileString() const override;
     };
 }
