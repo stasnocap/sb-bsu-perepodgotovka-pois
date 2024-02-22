@@ -49,4 +49,18 @@ namespace Consolegram::Domain::Users
             return item.GetName() == userName;
         });
     }
+
+    std::vector<User> UserRepository::GetUsersByMessages(const std::vector<Messages::Message>& messages)
+    {
+        std::vector usersIds{
+            SharedKernel::Select<Messages::Message, long>(
+                messages, [](const Messages::Message& message)
+                {
+                    return message.GetUserId();
+                })
+        };
+        SharedKernel::Distinct(usersIds);
+
+        return Get(usersIds);
+    }
 }

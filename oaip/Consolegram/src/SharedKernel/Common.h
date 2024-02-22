@@ -9,6 +9,10 @@ namespace Consolegram::SharedKernel
 {
     std::string GetString(std::string_view ask);
 
+    int GetInt(std::string_view message);
+
+    int GetInt(std::string_view message, const std::function<bool(int)>& condition);
+
     template <typename T>
     std::string ToLower(T& data)
     {
@@ -42,5 +46,12 @@ namespace Consolegram::SharedKernel
                          return predicate(entity);
                      });
         return filtered;
+    }
+
+    template <typename TEntity>
+    void Distinct(std::vector<TEntity>& vector)
+    {
+        std::ranges::sort(vector);
+        vector.erase(std::ranges::unique(vector).begin(), vector.end());
     }
 }

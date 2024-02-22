@@ -4,15 +4,17 @@
 
 namespace Consolegram::Console::View::Colorizer
 {
-    std::string_view SetColor(HANDLE hConsole, WORD wAttributes);
+    constexpr inline std::string_view ChatSeparator{"------------------------------------\n"};
+    
+    std::string_view SetColor(WORD wAttributes);
 
-    std::string_view SetBlueColor(HANDLE hConsole);
+    std::string_view SetBlueColor();
 
-    std::string_view SetBlackColor(HANDLE hConsole);
+    std::string_view SetBlackColor();
 
-    std::string_view SetDarkYellowColor(HANDLE hConsole);
+    std::string_view SetDarkYellowColor();
 
-    std::string_view SetGrayColor(HANDLE hConsole);
+    std::string_view SetGrayColor();
 
-    std::string_view SetPurpleColor(HANDLE hConsole);
+    std::string_view SetPurpleColor();
 }

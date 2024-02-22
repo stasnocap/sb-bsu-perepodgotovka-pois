@@ -1,22 +1,15 @@
-#include <format>
-#include <functional>
-#include <windows.h>
-
 #include "AuthenticationService.h"
-#include "Users/User.h"
-#include "Config.h"
-#include "Chats/ChatRepository.h"
-#include "Messages/MessageRepository.h"
+
 #include "Pages/HomePage.h"
-#include "Participants/ParticipantRepository.h"
-#include "Users/UserRepository.h"
+#include "Controls/HomeControls.h"
+#include "Pages/ChatPage.h"
 
 int main(int argc, char* argv[])
 {
     using namespace Consolegram::SharedKernel;
     using namespace Consolegram::Domain;
     using namespace Consolegram::Application;
-    using namespace Consolegram::Console::Pages;
+    using namespace Consolegram::Console;
 
     Config config{};
     config.Init(argc, argv);
@@ -27,6 +20,10 @@ int main(int argc, char* argv[])
     Chats::ChatRepository chatRepository{config};
 
     const Users::User* currentUser{AuthenticationService::Authenticate(userRepository)};
-    HomePage::ShowHomePage(currentUser, participantRepository, chatRepository, messageRepository);
+    
+    Pages::Home::Show(currentUser, participantRepository, chatRepository, messageRepository);
+    const Chats::Chat* chat{Controls::Home::SelectChat(chatRepository)};
+    Pages::Chat::Show(chat, messageRepository, userRepository);
+
     return EXIT_SUCCESS;
 }

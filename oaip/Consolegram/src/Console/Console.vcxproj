@@ -162,9 +162,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controls\HomeControls.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pages\ChatPage.cpp" />
     <ClCompile Include="Pages\HomePage.cpp" />
     <ClCompile Include="View\Colorizer.cpp" />
+    <ClCompile Include="View\Formatter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.Development.txt" />
@@ -190,8 +193,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controls\HomeControls.h" />
+    <ClInclude Include="Pages\ChatPage.h" />
     <ClInclude Include="Pages\HomePage.h" />
     <ClInclude Include="View\Colorizer.h" />
+    <ClInclude Include="View\Formatter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

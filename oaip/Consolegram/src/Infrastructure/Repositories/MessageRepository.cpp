@@ -7,6 +7,7 @@
 namespace Consolegram::Domain::Messages
 {
     constexpr int MaxMessageTextLength{100};
+    constexpr int ChatPageMessagesCount{10};
 
     MessageRepository::MessageRepository(const SharedKernel::Config& config) : Repository{
         config["MessagesFileRelativePath"],
@@ -37,13 +38,13 @@ namespace Consolegram::Domain::Messages
         [](const Message& chat)
         {
             std::ostringstream oStringStream{};
-        
+
             oStringStream
                 << chat.GetId() << '\t'
                 << chat.GetUserId() << '\t'
                 << chat.GetChatId() << '\t'
                 << chat.GetText();
-        
+
             return oStringStream.str();
         }
     }
@@ -85,6 +86,27 @@ namespace Consolegram::Domain::Messages
                 lastMessages.push_back(maxIdMessage);
             }
         }
+
+        return lastMessages;
+    }
+
+    std::vector<Message> MessageRepository::GetLastChatMessages(const long chatId)
+    {
+        const std::vector<Message>& messages{GetAll()};
+
+        std::vector filteredByChatId{
+            SharedKernel::Where<Message>(messages, [chatId](const Message& message)
+            {
+                return chatId == message.GetChatId();
+            })
+        };
+
+        if (filteredByChatId.size() <= ChatPageMessagesCount)
+        {
+            return filteredByChatId;           
+        }
+
+        std::vector lastMessages(filteredByChatId.end() - ChatPageMessagesCount, filteredByChatId.end());
 
         return lastMessages;
     }

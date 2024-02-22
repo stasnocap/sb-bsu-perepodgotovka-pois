@@ -5,34 +5,36 @@
 
 namespace Consolegram::Console::View::Colorizer
 {
-    std::string_view SetColor(const HANDLE hConsole, const WORD wAttributes)
+    const HANDLE HConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    
+    std::string_view SetColor(const WORD wAttributes)
     {
-        SetConsoleTextAttribute(hConsole, wAttributes);
+        SetConsoleTextAttribute(HConsole, wAttributes);
         return "";
     }
 
-    std::string_view SetBlueColor(const HANDLE hConsole)
+    std::string_view SetBlueColor()
     {
-        return SetColor(hConsole, 1);
+        return SetColor(1);
     }
 
-    std::string_view SetBlackColor(const HANDLE hConsole)
+    std::string_view SetBlackColor()
     {
-        return SetColor(hConsole, 0);
+        return SetColor(0);
     }
 
-    std::string_view SetDarkYellowColor(const HANDLE hConsole)
+    std::string_view SetDarkYellowColor()
     {
-        return SetColor(hConsole, 6);
+        return SetColor(6);
     }
 
-    std::string_view SetGrayColor(const HANDLE hConsole)
+    std::string_view SetGrayColor()
     {
-        return SetColor(hConsole, 8);
+        return SetColor(8);
     }
 
-    std::string_view SetPurpleColor(const HANDLE hConsole)
+    std::string_view SetPurpleColor()
     {
-        return SetColor(hConsole, 5);
+        return SetColor(5);
     }
 }

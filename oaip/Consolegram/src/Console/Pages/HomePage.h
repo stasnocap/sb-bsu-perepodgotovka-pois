@@ -4,9 +4,9 @@
 #include "../../Domain/Chats/ChatRepository.h"
 #include "../../Domain/Messages/MessageRepository.h"
 
-namespace Consolegram::Console::Pages::HomePage
+namespace Consolegram::Console::Pages::Home
 {
-    void ShowHomePage(
+    void Show(
         const Domain::Users::User* user,
         Domain::Participants::ParticipantRepository& participantRepository,
         Domain::Chats::ChatRepository& chatRepository,

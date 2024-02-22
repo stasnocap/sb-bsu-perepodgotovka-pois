@@ -1,50 +1,49 @@
 #include "HomePage.h"
 
 #include <iostream>
-#include <windows.h>
 #include "../View/Colorizer.h"
 
-namespace Consolegram::Console::Pages::HomePage
+namespace Consolegram::Console::Pages::Home
 {
-    constexpr std::string_view ChatSeparator{"------------------------------------\n"};
+    using namespace Domain;
 
-    void ShowHomePage(
-        const Domain::Users::User* user,
-        Domain::Participants::ParticipantRepository& participantRepository,
-        Domain::Chats::ChatRepository& chatRepository,
-        Domain::Messages::MessageRepository& messageRepository
+    void Show(
+        const Users::User* user,
+        Participants::ParticipantRepository& participantRepository,
+        Chats::ChatRepository& chatRepository,
+        Messages::MessageRepository& messageRepository
     )
     {
         std::vector chatIds{participantRepository.GetChatsIds(user->GetId())};
         const std::vector chats{chatRepository.Get(chatIds)};
         std::vector messages{messageRepository.GetLastMessages(chatIds)};
 
-        const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-        for (const Domain::Chats::Chat& chat : chats)
+        for (const Chats::Chat& chat : chats)
         {
             auto msg{
-                std::ranges::find_if(messages, [&chat](const Domain::Messages::Message& item)
+                std::ranges::find_if(messages, [&chat](const Messages::Message& item)
                 {
                     return chat.GetId() == item.GetChatId();
                 })
             };
 
             std::cout
-                << View::Colorizer::SetGrayColor(hConsole) << ChatSeparator << "--- "
-                << View::Colorizer::SetBlueColor(hConsole) << chat.GetName() << '\n';
+                << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator << "--- "
+                << View::Colorizer::SetBlueColor() << chat.GetName() << '\n';
 
             if (msg != messages.end())
             {
                 std::cout
-                    << View::Colorizer::SetGrayColor(hConsole) << '-'
-                    << View::Colorizer::SetPurpleColor(hConsole) << chat.GetId()
-                    << View::Colorizer::SetGrayColor(hConsole) << "- "
-                    << View::Colorizer::SetDarkYellowColor(hConsole)
-                    << msg->GetText().substr(0, ChatSeparator.size() - 5) << '\n';
+                    << View::Colorizer::SetGrayColor() << '-'
+                    << View::Colorizer::SetPurpleColor() << chat.GetId()
+                    << View::Colorizer::SetGrayColor() << "- "
+                    << View::Colorizer::SetDarkYellowColor()
+                    << msg->GetText().substr(0, View::Colorizer::ChatSeparator.size() - 5) << '\n';
             }
         }
 
-        std::cout << View::Colorizer::SetGrayColor(hConsole) << ChatSeparator;
+        std::cout
+                << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator
+                << View::Colorizer::SetBlackColor();
     }
 }

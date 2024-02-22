@@ -13,5 +13,7 @@ namespace Consolegram::Domain::Messages
         explicit MessageRepository(const SharedKernel::Config& config);
 
         std::vector<Message> GetLastMessages(std::vector<long>& chatIds);
+
+        std::vector<Message> GetLastChatMessages(long chatId);
     };
 }
