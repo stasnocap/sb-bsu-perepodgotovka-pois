@@ -1,5 +1,7 @@
 #include "../../Domain/Participants/ParticipantRepository.h"
 
+#include <sstream>
+
 namespace Consolegram::Domain::Participants
 {
     ParticipantRepository::ParticipantRepository(const SharedKernel::Config& config) : Repository{
@@ -23,6 +25,18 @@ namespace Consolegram::Domain::Participants
             }
 
             return participants;
+        },
+        [](const Participant& participant)
+        {
+            std::ostringstream oStringStream{};
+        
+            oStringStream
+                << participant.GetId() << '\t'
+                << participant.GetUserId() << '\t'
+                << participant.GetChatId() << '\t'
+                << participant.CanWrite();
+        
+            return oStringStream.str();
         }
     }
     {

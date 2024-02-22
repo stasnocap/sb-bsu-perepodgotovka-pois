@@ -15,7 +15,5 @@ namespace Consolegram::Domain::Users
         [[nodiscard]] std::string_view GetName() const;
 
         [[nodiscard]] std::string_view GetPassword() const;
-
-        [[nodiscard]] std::string ToFileString() const override;
     };
 }

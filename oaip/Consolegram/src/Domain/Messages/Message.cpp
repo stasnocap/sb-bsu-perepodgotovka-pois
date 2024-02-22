@@ -25,17 +25,4 @@ namespace Consolegram::Domain::Messages
     {
         return _text;
     }
-
-    std::string Message::ToFileString() const
-    {
-        std::ostringstream oStringStream{};
-        
-        oStringStream
-            << GetId() << '\t'
-            << GetUserId() << '\t'
-            << GetChatId() << '\t'
-            << GetText();
-        
-        return oStringStream.str();
-    }
 }

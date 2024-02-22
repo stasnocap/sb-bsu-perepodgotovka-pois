@@ -18,7 +18,5 @@ namespace Consolegram::Domain::Messages
         [[nodiscard]] long GetChatId() const;
 
         [[nodiscard]] std::string_view GetText() const;
-
-        [[nodiscard]] std::string ToFileString() const override;
     };
 }

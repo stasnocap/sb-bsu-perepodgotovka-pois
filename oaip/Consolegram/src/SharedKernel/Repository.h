@@ -20,6 +20,7 @@ namespace Consolegram::SharedKernel
         typename std::vector<T>::iterator _end{};
         std::string _fileName{};
         std::function<std::vector<T>(std::ifstream&)> _fileReader{};
+        std::function<std::string(T&)> _toFileString{};
 
         void SaveToFile()
         {
@@ -32,7 +33,7 @@ namespace Consolegram::SharedKernel
 
             for (size_t i = 0; i < _cachedEntities.size(); ++i)
             {
-                fileStream << _cachedEntities[i].ToFileString();
+                fileStream << _toFileString(_cachedEntities[i]);
 
                 if (i != _cachedEntities.size() - 1)
                 {
@@ -45,8 +46,9 @@ namespace Consolegram::SharedKernel
 
     public:
         explicit Repository(std::string fileName,
-                            std::function<std::vector<T>(std::ifstream&)> fileReader)
-            : _fileName{std::move(fileName)}, _fileReader{std::move(fileReader)}
+                            std::function<std::vector<T>(std::ifstream&)> fileReader,
+                            std::function<std::string(T&)> toFileString)
+            : _fileName{std::move(fileName)}, _fileReader{std::move(fileReader)}, _toFileString(toFileString)
         {
         }
 

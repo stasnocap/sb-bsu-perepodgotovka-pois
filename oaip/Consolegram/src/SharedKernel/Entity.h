@@ -14,7 +14,5 @@ namespace Consolegram::SharedKernel
 
     public:
         [[nodiscard]] long GetId() const;
-        
-        [[nodiscard]] virtual std::string ToFileString() const = 0;
     };
 }

@@ -23,17 +23,4 @@ namespace Consolegram::Domain::Participants
     {
         return _canWrite;
     }
-
-    std::string Participant::ToFileString() const
-    {
-        std::ostringstream oStringStream{};
-        
-        oStringStream
-            << GetId() << '\t'
-            << GetUserId() << '\t'
-            << GetChatId() << '\t'
-            << CanWrite();
-        
-        return oStringStream.str();
-    }
 }

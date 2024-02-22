@@ -1,7 +1,6 @@
 #include "User.h"
 
 #include <format>
-#include <sstream>
 
 namespace Consolegram::Domain::Users
 {
@@ -18,17 +17,5 @@ namespace Consolegram::Domain::Users
     std::string_view User::GetPassword() const
     {
         return _password;
-    }
-
-    std::string User::ToFileString() const
-    {
-        std::ostringstream oStringStream{};
-        
-        oStringStream
-            << GetId() << '\t'
-            << GetName() << '\t'
-            << GetPassword();
-        
-        return oStringStream.str();
     }
 }

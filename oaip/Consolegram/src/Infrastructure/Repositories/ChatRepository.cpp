@@ -1,5 +1,7 @@
 #include "../../Domain/Chats/ChatRepository.h"
 
+#include <sstream>
+
 namespace Consolegram::Domain::Chats
 {
     constexpr int MaxChatNameLength{30};
@@ -23,6 +25,16 @@ namespace Consolegram::Domain::Chats
             }
 
             return chats;
+        },
+        [](const Chat& chat)
+        {
+            std::ostringstream oStringStream{};
+        
+            oStringStream
+                << chat.GetId() << '\t'
+                << chat.GetName();
+        
+            return oStringStream.str();
         }
     }
     {

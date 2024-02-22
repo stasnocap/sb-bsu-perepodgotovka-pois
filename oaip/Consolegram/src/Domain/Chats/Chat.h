@@ -12,7 +12,5 @@ namespace Consolegram::Domain::Chats
         explicit Chat(long id, std::string name);
 
         [[nodiscard]] std::string_view GetName() const;
-
-        [[nodiscard]] std::string ToFileString() const override;
     };
 }

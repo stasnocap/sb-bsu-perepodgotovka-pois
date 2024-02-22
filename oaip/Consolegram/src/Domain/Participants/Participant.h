@@ -17,7 +17,5 @@ namespace Consolegram::Domain::Participants
         [[nodiscard]] long GetChatId() const;
 
         [[nodiscard]] bool CanWrite() const;
-
-        [[nodiscard]] std::string ToFileString() const override;
     };
 }

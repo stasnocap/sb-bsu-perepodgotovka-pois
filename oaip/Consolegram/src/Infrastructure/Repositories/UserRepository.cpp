@@ -1,5 +1,7 @@
 #include "../../Domain/Users/UserRepository.h"
 
+#include <sstream>
+
 namespace Consolegram::Domain::Users
 {
     UserRepository::UserRepository(const SharedKernel::Config& config) : Repository{
@@ -23,6 +25,17 @@ namespace Consolegram::Domain::Users
             }
 
             return users;
+        },
+        [](const User& user)
+        {
+            std::ostringstream oStringStream{};
+        
+            oStringStream
+                << user.GetId() << '\t'
+                << user.GetName() << '\t'
+                << user.GetPassword();
+        
+            return oStringStream.str();
         }
     }
     {

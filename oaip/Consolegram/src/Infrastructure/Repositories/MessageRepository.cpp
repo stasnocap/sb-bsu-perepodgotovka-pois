@@ -2,6 +2,8 @@
 #include "../../SharedKernel/Config.h"
 #include "../../Domain/Messages/MessageRepository.h"
 
+#include <sstream>
+
 namespace Consolegram::Domain::Messages
 {
     constexpr int MaxMessageTextLength{100};
@@ -31,6 +33,18 @@ namespace Consolegram::Domain::Messages
             }
 
             return messages;
+        },
+        [](const Message& chat)
+        {
+            std::ostringstream oStringStream{};
+        
+            oStringStream
+                << chat.GetId() << '\t'
+                << chat.GetUserId() << '\t'
+                << chat.GetChatId() << '\t'
+                << chat.GetText();
+        
+            return oStringStream.str();
         }
     }
     {
