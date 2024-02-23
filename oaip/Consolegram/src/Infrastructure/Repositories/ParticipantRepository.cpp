@@ -29,13 +29,13 @@ namespace Consolegram::Domain::Participants
         [](const Participant& participant)
         {
             std::ostringstream oStringStream{};
-        
+
             oStringStream
                 << participant.GetId() << '\t'
                 << participant.GetUserId() << '\t'
                 << participant.GetChatId() << '\t'
                 << participant.CanWrite();
-        
+
             return oStringStream.str();
         }
     }
@@ -47,15 +47,34 @@ namespace Consolegram::Domain::Participants
         const std::vector<Participant>& participants{GetAll()};
 
         const std::vector filteredByUserId{
-            SharedKernel::Where<Participant>(participants, [userId](const Participant& participant)
+            SharedKernel::Common::Where<Participant>(participants, [userId](const Participant& participant)
             {
                 return participant.GetUserId() == userId;
             })
         };
 
-        return SharedKernel::Select<Participant, long>(filteredByUserId, [](const Participant& participant)
+        return SharedKernel::Common::Select<Participant, long>(filteredByUserId, [](const Participant& participant)
         {
             return participant.GetChatId();
         });
+    }
+
+    bool ParticipantRepository::CanWrite(const long userId, const long chatId)
+    {
+        const std::vector<Participant>& participants{GetAll()};
+
+        const auto participant{
+            std::ranges::find_if(participants, [userId, chatId](const Participant& participant)
+            {
+                return participant.GetUserId() == userId && participant.GetChatId() == chatId;
+            })
+        };
+
+        if (participant == End())
+        {
+            throw std::invalid_argument(std::format("Participant with userId({}) and chatId({}) was not found", userId, chatId));
+        }
+
+        return participant->CanWrite();
     }
 }

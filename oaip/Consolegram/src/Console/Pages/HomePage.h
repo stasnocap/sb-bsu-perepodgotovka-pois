@@ -6,7 +6,7 @@
 
 namespace Consolegram::Console::Pages::Home
 {
-    void Show(
+    bool Show(
         const Domain::Users::User* user,
         Domain::Participants::ParticipantRepository& participantRepository,
         Domain::Chats::ChatRepository& chatRepository,

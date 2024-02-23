@@ -56,10 +56,10 @@ namespace Consolegram::SharedKernel
         std::string environment{};
         for (int i = 1; i < argc; ++i)
         {
-            const std::string lowerArg{ToLower(argv[i])};
+            const std::string lowerArg{Common::ToLower(argv[i])};
             if (lowerArg == EnvironmentKey && i + 1 < argc)
             {
-                const std::string nextLowerArg{ToLower(argv[i + 1])};
+                const std::string nextLowerArg{Common::ToLower(argv[i + 1])};
                 if (nextLowerArg == ProductionEnvironment)
                 {
                     environment = ProductionEnvironment;

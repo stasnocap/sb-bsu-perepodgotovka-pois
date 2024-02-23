@@ -162,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controls\ChatControls.cpp" />
     <ClCompile Include="Controls\HomeControls.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pages\ChatPage.cpp" />
@@ -193,6 +194,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controls\ChatControls.h" />
     <ClInclude Include="Controls\HomeControls.h" />
     <ClInclude Include="Pages\ChatPage.h" />
     <ClInclude Include="Pages\HomePage.h" />

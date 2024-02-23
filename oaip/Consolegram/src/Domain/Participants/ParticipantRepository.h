@@ -13,5 +13,7 @@ namespace Consolegram::Domain::Participants
         explicit ParticipantRepository(const SharedKernel::Config& config);
 
         std::vector<long> GetChatsIds(long userId);
+        
+        bool CanWrite(long userId, long chatId);
     };
 }

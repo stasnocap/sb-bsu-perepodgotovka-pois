@@ -6,7 +6,6 @@
 
 namespace Consolegram::Domain::Messages
 {
-    constexpr int MaxMessageTextLength{100};
     constexpr int ChatPageMessagesCount{10};
 
     MessageRepository::MessageRepository(const SharedKernel::Config& config) : Repository{
@@ -56,7 +55,7 @@ namespace Consolegram::Domain::Messages
         const std::vector<Message>& messages{GetAll()};
 
         const std::vector filteredByChatIds{
-            SharedKernel::Where<Message>(messages, [&chatIds](const Message& message)
+            SharedKernel::Common::Where<Message>(messages, [&chatIds](const Message& message)
             {
                 return std::ranges::any_of(chatIds, [&message](const long chatId)
                 {
@@ -69,7 +68,7 @@ namespace Consolegram::Domain::Messages
         for (const Message& msg : filteredByChatIds)
         {
             const std::vector filteredByChatId{
-                SharedKernel::Where<Message>(filteredByChatIds, [&msg](const Message& item)
+                SharedKernel::Common::Where<Message>(filteredByChatIds, [&msg](const Message& item)
                 {
                     return msg.GetChatId() == item.GetChatId();
                 })
@@ -95,7 +94,7 @@ namespace Consolegram::Domain::Messages
         const std::vector<Message>& messages{GetAll()};
 
         std::vector filteredByChatId{
-            SharedKernel::Where<Message>(messages, [chatId](const Message& message)
+            SharedKernel::Common::Where<Message>(messages, [chatId](const Message& message)
             {
                 return chatId == message.GetChatId();
             })

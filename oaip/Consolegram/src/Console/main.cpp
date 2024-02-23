@@ -1,8 +1,16 @@
-#include "AuthenticationService.h"
+#include <iostream>
 
+#include "AuthenticationService.h"
+#include "Controls/ChatControls.h"
 #include "Pages/HomePage.h"
 #include "Controls/HomeControls.h"
 #include "Pages/ChatPage.h"
+
+int SuccessExit()
+{
+    std::cout << "Goodbye!";
+    return EXIT_SUCCESS;
+}
 
 int main(int argc, char* argv[])
 {
@@ -19,11 +27,29 @@ int main(int argc, char* argv[])
     Messages::MessageRepository messageRepository{config};
     Chats::ChatRepository chatRepository{config};
 
-    const Users::User* currentUser{AuthenticationService::Authenticate(userRepository)};
-    
-    Pages::Home::Show(currentUser, participantRepository, chatRepository, messageRepository);
-    const Chats::Chat* chat{Controls::Home::SelectChat(chatRepository)};
-    Pages::Chat::Show(chat, messageRepository, userRepository);
+    std::cout << "Tip: hit enter to exit or go back.\n";
 
-    return EXIT_SUCCESS;
+    const Users::User* currentUser{AuthenticationService::Authenticate(userRepository)};
+    if (!currentUser)
+    {
+        return SuccessExit();
+    }
+
+    while (true)
+    {
+        if (!Pages::Home::Show(currentUser, participantRepository, chatRepository, messageRepository))
+        {
+            return SuccessExit();
+        }
+
+        const Chats::Chat* selectedChat{Controls::Home::SelectChat(chatRepository)};
+        if (!selectedChat)
+        {
+            return SuccessExit();
+        }
+
+        Pages::Chat::Show(selectedChat, messageRepository, userRepository);
+
+        Controls::Chat::WriteMessage(currentUser, selectedChat, messageRepository, participantRepository);
+    }
 }

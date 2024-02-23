@@ -48,7 +48,7 @@ namespace Consolegram::SharedKernel
         explicit Repository(std::string fileName,
                             std::function<std::vector<T>(std::ifstream&)> fileReader,
                             std::function<std::string(T&)> toFileString)
-            : _fileName{std::move(fileName)}, _fileReader{std::move(fileReader)}, _toFileString(toFileString)
+            : _fileName{std::move(fileName)}, _fileReader{std::move(fileReader)}, _toFileString(std::move(toFileString))
         {
         }
 
@@ -85,13 +85,32 @@ namespace Consolegram::SharedKernel
         {
             const std::vector<T>& entities{GetAll()};
             // ReSharper disable once CppRedundantTemplateKeyword
-            return SharedKernel::template Where<T>(entities, [&ids](const T& entity)
+            return SharedKernel::template Common::Where<T>(entities, [&ids](const T& entity)
             {
                 return std::any_of(ids.begin(), ids.end(), [&entity](long id)
                 {
                     return entity.GetId() == id;
                 });
             });
+        }
+
+        long GetNewId()
+        {
+            const std::vector<T>& entities{GetAll()};
+
+            if (entities.empty())
+            {
+                return 1;
+            }
+
+            std::vector<long> ids{
+                Common::Select<T, long>(entities, [](const T entity)
+                {
+                    return entity.GetId();
+                })
+            };
+
+            return *std::ranges::max_element(ids) + 1;
         }
 
         std::vector<T>& GetAll()

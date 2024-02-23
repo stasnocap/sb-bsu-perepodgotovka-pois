@@ -7,9 +7,16 @@ namespace Consolegram::Application::AuthenticationService
 {
     Domain::Users::User* Authenticate(Domain::Users::UserRepository& usersRepository)
     {
+        std::cout << "Please, login.\n";
+        
         while (true)
         {
-            const std::string userName{SharedKernel::GetString("Please, login.\nEnter username:")};
+            const std::string userName{SharedKernel::Common::GetString("Enter username:")};
+
+            if (userName[0] == SharedKernel::Common::ExitKey)
+            {
+                return nullptr;
+            }
 
             const auto user{usersRepository.GetByUserName(userName)};
 
@@ -19,7 +26,12 @@ namespace Consolegram::Application::AuthenticationService
                 continue;
             }
 
-            const std::string password{SharedKernel::GetString("Enter password:")};
+            const std::string password{SharedKernel::Common::GetString("Enter password:")};
+
+            if (password[0] == SharedKernel::Common::ExitKey)
+            {
+                return nullptr;
+            }
 
             if (user->GetPassword() != password)
             {

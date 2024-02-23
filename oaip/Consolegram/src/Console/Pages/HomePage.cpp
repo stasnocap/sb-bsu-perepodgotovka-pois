@@ -7,7 +7,7 @@ namespace Consolegram::Console::Pages::Home
 {
     using namespace Domain;
 
-    void Show(
+    bool Show(
         const Users::User* user,
         Participants::ParticipantRepository& participantRepository,
         Chats::ChatRepository& chatRepository,
@@ -15,6 +15,13 @@ namespace Consolegram::Console::Pages::Home
     )
     {
         std::vector chatIds{participantRepository.GetChatsIds(user->GetId())};
+
+        if (chatIds.empty())
+        {
+            std::cout << "You have no chats\n";
+            return false;
+        }
+        
         const std::vector chats{chatRepository.Get(chatIds)};
         std::vector messages{messageRepository.GetLastMessages(chatIds)};
 
@@ -45,5 +52,7 @@ namespace Consolegram::Console::Pages::Home
         std::cout
                 << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator
                 << View::Colorizer::SetBlackColor();
+
+        return true;
     }
 }
