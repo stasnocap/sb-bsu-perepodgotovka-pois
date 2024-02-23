@@ -15,9 +15,7 @@ namespace Consolegram::Application::Chats::GetChatsWithLastMessages
     public:
         explicit GetChatsWithLastMessagesResponse(
             const std::vector<Domain::Chats::Chat>& chats,
-            const std::vector<Domain::Messages::Message>& messages) : _chats{chats}, _messages{messages}
-        {
-        }
+            const std::vector<Domain::Messages::Message>& messages);
 
         [[nodiscard]] std::vector<Domain::Chats::Chat> GetChats() const;
 

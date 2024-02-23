@@ -5,6 +5,7 @@
 #include "../View/Colorizer.h"
 #include "../View/Formatter.h"
 #include "Messages/MessageRepository.h"
+#include "Messages/GetChatMessages/GetChatMessagesHandler.h"
 #include "Users/UserRepository.h"
 
 namespace Consolegram::Console::Pages::Chat
@@ -14,13 +15,15 @@ namespace Consolegram::Console::Pages::Chat
     void Show(const Chats::Chat* chat, Messages::MessageRepository& messageRepository,
               Users::UserRepository& userRepository)
     {
-        const std::vector messages{messageRepository.GetLastChatMessages(chat->GetId())};
-        const std::vector users{userRepository.GetUsersByMessages(messages)};
+        const Result getChatMessagesResult{
+            Application::Messages::GetChatMessages::Handle(chat->GetId(), messageRepository, userRepository)
+        };
 
         std::cout
             << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator;
-        
-        for (const Messages::Message& message : messages)
+
+        const std::vector users{getChatMessagesResult.GetValue().GetUsers()};
+        for (const Messages::Message& message : getChatMessagesResult.GetValue().GetMessages())
         {
             auto user{
                 std::ranges::find_if(users, [&message](const Users::User& item)
@@ -36,9 +39,10 @@ namespace Consolegram::Console::Pages::Chat
 
             std::cout
                 << View::Colorizer::SetGrayColor()
-                    << View::Colorizer::SetPurpleColor() << user->GetName() << '\n'
+                << View::Colorizer::SetPurpleColor() << user->GetName() << '\n'
                 << View::Colorizer::SetGrayColor()
-                    << View::Colorizer::SetDarkYellowColor() << View::Formatter::FormatMessageText(message.GetText()) << '\n'
+                << View::Colorizer::SetDarkYellowColor() << View::Formatter::FormatMessageText(message.GetText()) <<
+                '\n'
                 << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator;
         }
 

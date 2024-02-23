@@ -15,7 +15,7 @@ namespace Consolegram::Console::Pages::Home
         Messages::MessageRepository& messageRepository
     )
     {
-        const Result result{
+        const Result getChatsWithLastMessagesResult{
             Application::Chats::GetChatsWithLastMessages::Handle(
                 user->GetId(),
                 participantRepository,
@@ -24,14 +24,14 @@ namespace Consolegram::Console::Pages::Home
             )
         };
 
-        if (result.IsFailure())
+        if (getChatsWithLastMessagesResult.IsFailure())
         {
-            std::cout << result.GetError() << '\n';
+            std::cout << getChatsWithLastMessagesResult.GetError() << '\n';
             return false;
         }
 
-        std::vector messages{result.GetValue().GetMessages()};
-        for (const Chats::Chat& chat : result.GetValue().GetChats())
+        std::vector messages{getChatsWithLastMessagesResult.GetValue().GetMessages()};
+        for (const Chats::Chat& chat : getChatsWithLastMessagesResult.GetValue().GetChats())
         {
             auto msg{
                 std::ranges::find_if(messages, [&chat](const Messages::Message& item)
