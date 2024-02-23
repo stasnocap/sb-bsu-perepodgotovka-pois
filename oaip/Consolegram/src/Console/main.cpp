@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "AuthenticationService.h"
 #include "Controls/ChatControls.h"
 #include "Pages/HomePage.h"
 #include "Controls/HomeControls.h"
@@ -17,7 +16,6 @@ int main(int argc, char* argv[])
 {
     using namespace Consolegram::SharedKernel;
     using namespace Consolegram::Domain;
-    using namespace Consolegram::Application;
     using namespace Consolegram::Console;
 
     Config config{};

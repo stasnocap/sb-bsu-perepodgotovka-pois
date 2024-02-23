@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#include "AuthenticationService.h"
 #include "Users/User.h"
 #include "Users/UserRepository.h"
+#include "Users/Authentication/AuthenticationHandler.h"
 
 namespace Consolegram::Console::Pages::Authenticate
 {
@@ -15,7 +15,7 @@ namespace Consolegram::Console::Pages::Authenticate
         while (true)
         {
             Result authenticationResult{
-                Application::AuthenticationService::Authenticate(usersRepository)
+                Application::Users::AuthenticationHandler::Handle(usersRepository)
             };
 
             if (authenticationResult.IsFailure())

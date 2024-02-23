@@ -1,10 +1,10 @@
-#include "AuthenticationService.h"
-#include "../SharedKernel/Common.h"
-#include "../SharedKernel/Result.h"
+#include "AuthenticationHandler.h"
+#include "../../../SharedKernel/Common.h"
+#include "../../../SharedKernel/Result.h"
 
-namespace Consolegram::Application::AuthenticationService
+namespace Consolegram::Application::Users::AuthenticationHandler
 {
-    Result<Domain::Users::User*> Authenticate(Domain::Users::UserRepository& usersRepository)
+    Result<Domain::Users::User*> Handle(Domain::Users::UserRepository& usersRepository)
     {
         const std::string userName{SharedKernel::Common::GetString("Enter username:")};
 
