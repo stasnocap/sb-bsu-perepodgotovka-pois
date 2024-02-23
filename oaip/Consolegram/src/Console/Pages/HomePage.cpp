@@ -15,7 +15,7 @@ namespace Consolegram::Console::Pages::Home
         Messages::MessageRepository& messageRepository
     )
     {
-        const Result getChatsWithLastMessagesResult{
+        const SharedKernel::ResultT getChatsWithLastMessagesResult{
             Application::Chats::GetChatsWithLastMessages::Handle(
                 user->GetId(),
                 participantRepository,

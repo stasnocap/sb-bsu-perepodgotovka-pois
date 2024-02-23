@@ -235,6 +235,7 @@
       <SDLCheck>true</SDLCheck>
       <LibCompiled>true</LibCompiled>
     </ClCompile>
+    <ClCompile Include="Result.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Change.h" />
@@ -243,6 +244,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Repository.h" />
     <ClInclude Include="Result.h" />
+    <ClInclude Include="ResultT.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

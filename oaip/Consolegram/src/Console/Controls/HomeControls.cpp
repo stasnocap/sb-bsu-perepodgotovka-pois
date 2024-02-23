@@ -20,7 +20,7 @@ namespace Consolegram::Console::Controls::Home
                 return true;
             }
 
-            const Result getChatResult{Application::Chats::GetChat::Handle(chatId, chatRepository)};
+            const SharedKernel::ResultT getChatResult{Application::Chats::GetChat::Handle(chatId, chatRepository)};
 
             if (getChatResult.IsFailure())
             {

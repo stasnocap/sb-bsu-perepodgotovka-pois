@@ -2,7 +2,7 @@
 
 namespace Consolegram::Application::Chats::GetChatsWithLastMessages
 {
-    Result<GetChatsWithLastMessagesResponse> Handle(
+    SharedKernel::ResultT<GetChatsWithLastMessagesResponse> Handle(
         const long userId,
         Domain::Participants::ParticipantRepository& participantRepository,
         Domain::Chats::ChatRepository& chatRepository,
@@ -13,13 +13,13 @@ namespace Consolegram::Application::Chats::GetChatsWithLastMessages
 
         if (chatIds.empty())
         {
-            return Result{false, GetChatsWithLastMessagesResponse{{}, {}}, "You have no chats"};
+            return SharedKernel::ResultT{false, GetChatsWithLastMessagesResponse{{}, {}}, "You have no chats"};
         }
 
         const std::vector chats{chatRepository.Get(chatIds)};
 
         const std::vector messages{messageRepository.GetLastMessages(chatIds)};
 
-        return Result<GetChatsWithLastMessagesResponse>::Success(GetChatsWithLastMessagesResponse{chats, messages});
+        return SharedKernel::ResultT<GetChatsWithLastMessagesResponse>::Success(GetChatsWithLastMessagesResponse{chats, messages});
     }
 }

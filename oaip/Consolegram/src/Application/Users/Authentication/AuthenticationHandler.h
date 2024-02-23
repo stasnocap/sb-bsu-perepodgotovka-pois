@@ -1,8 +1,8 @@
 #pragma once
 #include "../../../Domain/Users/UserRepository.h"
-#include "../../../SharedKernel/Result.h"
+#include "../../../SharedKernel/ResultT.h"
 
 namespace Consolegram::Application::Users::AuthenticationHandler
 {
-    Result<Domain::Users::User*> Handle(Domain::Users::UserRepository& usersRepository);
+    SharedKernel::ResultT<Domain::Users::User*> Handle(Domain::Users::UserRepository& usersRepository);
 }

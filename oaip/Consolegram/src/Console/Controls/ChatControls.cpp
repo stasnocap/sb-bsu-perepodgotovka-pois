@@ -4,6 +4,7 @@
 
 #include "Chats/Chat.h"
 #include "Messages/MessageRepository.h"
+#include "Messages/CreateMessage/CreateMessageHandler.h"
 #include "Participants/ParticipantRepository.h"
 #include "Users/User.h"
 
@@ -38,25 +39,27 @@ namespace Consolegram::Console::Controls::Chat
                     break;
                 }
 
-                const Domain::Messages::Message message{
-                    messageRepository.GetNewId(), user->GetId(), chat->GetId(), messageText
-                };
-
-                messageRepository.Add(message);
-
-                messageRepository.SaveChanges();
+                if (SharedKernel::Result createMessageResult{
+                    Application::Messages::CreateMessage::Handle(user->GetId(), chat->GetId(), messageText,
+                                                                 messageRepository)
+                }; createMessageResult.IsFailure())
+                {
+                    std::cout << createMessageResult.GetError() << '\n';
+                    break;
+                }
             }
-        } else
+        }
+        else
         {
             SharedKernel::Common::GetString("Hit enter to exit.", [](const std::string_view input)
-                    {
-                        if (input[0] == SharedKernel::Common::ExitKey)
-                        {
-                            return true;
-                        }
+            {
+                if (input[0] == SharedKernel::Common::ExitKey)
+                {
+                    return true;
+                }
 
-                        return false;
-                    });
+                return false;
+            });
         }
     }
 }

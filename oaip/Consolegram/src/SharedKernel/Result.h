@@ -1,46 +1,26 @@
 ﻿#pragma once
+
 #include <string>
 
-template <typename T>
-class Result
+namespace Consolegram::SharedKernel
 {
-    bool _success;
-    T _value;
-    std::string _error;
-
-public:
-    explicit Result(const bool success, const T& value, const std::string_view error)
-        : _success{success}, _value{value}, _error{error}
+    class Result
     {
-    }
+        bool _success;
+        std::string _error;
 
-    [[nodiscard]] bool IsSuccess() const
-    {
-        return _success;
-    }
+    protected:
+        explicit Result(bool success, std::string_view error);
 
-    [[nodiscard]] bool IsFailure() const
-    {
-        return !_success;
-    }
+    public:
+        [[nodiscard]] bool IsSuccess() const;
 
-    [[nodiscard]] T GetValue() const
-    {
-        return _value;
-    }
+        [[nodiscard]] bool IsFailure() const;
 
-    [[nodiscard]] std::string_view GetError() const
-    {
-        return _error;
-    }
+        [[nodiscard]] std::string_view GetError() const;
 
-    static Result Success(const T& value)
-    {
-        return Result{true, value, ""};
-    }
+        static Result Success();
 
-    static Result Failure(const std::string& errorMessage)
-    {
-        return Result{false, nullptr, errorMessage};
-    }
-};
+        static Result Failure(const std::string& errorMessage);
+    };
+}

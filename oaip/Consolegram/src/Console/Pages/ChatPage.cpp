@@ -15,7 +15,7 @@ namespace Consolegram::Console::Pages::Chat
     void Show(const Chats::Chat* chat, Messages::MessageRepository& messageRepository,
               Users::UserRepository& userRepository)
     {
-        const Result getChatMessagesResult{
+        const SharedKernel::ResultT getChatMessagesResult{
             Application::Messages::GetChatMessages::Handle(chat->GetId(), messageRepository, userRepository)
         };
 

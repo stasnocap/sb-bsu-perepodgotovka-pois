@@ -14,7 +14,7 @@ namespace Consolegram::Console::Pages::Authenticate
 
         while (true)
         {
-            Result authenticationResult{
+            SharedKernel::ResultT authenticationResult{
                 Application::Users::AuthenticationHandler::Handle(usersRepository)
             };
 

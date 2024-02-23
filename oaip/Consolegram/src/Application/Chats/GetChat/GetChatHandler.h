@@ -2,9 +2,9 @@
 
 #include "../../../Domain/Chats/Chat.h"
 #include "../../../Domain/Chats/ChatRepository.h"
-#include "../../../SharedKernel/Result.h"
+#include "../../../SharedKernel/ResultT.h"
 
 namespace Consolegram::Application::Chats::GetChat
 {
-    Result<Domain::Chats::Chat*> Handle(long id, Domain::Chats::ChatRepository& chatRepository);
+    SharedKernel::ResultT<Domain::Chats::Chat*> Handle(long id, Domain::Chats::ChatRepository& chatRepository);
 }
