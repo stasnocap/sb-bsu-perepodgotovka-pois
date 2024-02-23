@@ -4,38 +4,34 @@
 
 #include "Common.h"
 #include "Chats/ChatRepository.h"
+#include "Chats/GetChat/GetChatHandler.h"
 
 namespace Consolegram::Console::Controls::Home
 {
     using namespace Domain;
-    
+
     Chats::Chat* SelectChat(Chats::ChatRepository& chatRepository)
     {
-        std::vector<Chats::Chat>::const_iterator chatIterator;
-        SharedKernel::Common::GetInt("Select a chat number:", [&chatRepository, &chatIterator](const int chatId)
+        Chats::Chat* chat{nullptr};
+        SharedKernel::Common::GetInt("Select a chat number:", [&chatRepository, &chat](const int chatId)
         {
             if (chatId == SharedKernel::Common::ExitCode)
             {
-                chatIterator._Ptr = nullptr;
                 return true;
             }
-            
-            chatIterator = chatRepository.Get(chatId);
 
-            if (chatIterator == chatRepository.End())
+            const Result getChatResult{Application::Chats::GetChat::Handle(chatId, chatRepository)};
+
+            if (getChatResult.IsFailure())
             {
-                std::cout << "Selected chat was not found!\n";
+                std::cout << getChatResult.GetError() << '\n';
                 return false;
             }
-            
+
+            chat = getChatResult.GetValue();
             return true;
         });
 
-        if (!chatIterator._Ptr)
-        {
-            return nullptr;
-        }
-
-        return chatIterator._Ptr;
+        return chat;
     }
 }

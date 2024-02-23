@@ -31,6 +31,7 @@
   <ItemGroup>
     <ClInclude Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesHandler.h" />
     <ClInclude Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesResponse.h" />
+    <ClInclude Include="Chats\GetChat\GetChatHandler.h" />
     <ClInclude Include="Messages\GetChatMessages\GetChatMessagesHandler.h" />
     <ClInclude Include="Messages\GetChatMessages\GetChatMessagesResponse.h" />
     <ClInclude Include="Users\Authentication\AuthenticationHandler.h" />
@@ -38,6 +39,7 @@
   <ItemGroup>
     <ClCompile Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesHandler.cpp" />
     <ClCompile Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesResponse.cpp" />
+    <ClCompile Include="Chats\GetChat\GetChatHandler.cpp" />
     <ClCompile Include="Messages\GetChatMessages\GetChatMessagesHandler.cpp" />
     <ClCompile Include="Messages\GetChatMessages\GetChatMessagesResponse.cpp" />
     <ClCompile Include="Users\Authentication\AuthenticationHandler.cpp">
