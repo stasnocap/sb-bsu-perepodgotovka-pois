@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "../View/Colorizer.h"
+#include "Chats/GetChatsWithLastMessages/GetChatsWithLastMessagesHandler.h"
 
 namespace Consolegram::Console::Pages::Home
 {
@@ -14,18 +15,23 @@ namespace Consolegram::Console::Pages::Home
         Messages::MessageRepository& messageRepository
     )
     {
-        std::vector chatIds{participantRepository.GetChatsIds(user->GetId())};
+        const Result result{
+            Application::Chats::GetChatsWithLastMessages::Handle(
+                user->GetId(),
+                participantRepository,
+                chatRepository,
+                messageRepository
+            )
+        };
 
-        if (chatIds.empty())
+        if (result.IsFailure())
         {
-            std::cout << "You have no chats\n";
+            std::cout << result.GetError() << '\n';
             return false;
         }
-        
-        const std::vector chats{chatRepository.Get(chatIds)};
-        std::vector messages{messageRepository.GetLastMessages(chatIds)};
 
-        for (const Chats::Chat& chat : chats)
+        std::vector messages{result.GetValue().GetMessages()};
+        for (const Chats::Chat& chat : result.GetValue().GetChats())
         {
             auto msg{
                 std::ranges::find_if(messages, [&chat](const Messages::Message& item)
@@ -50,8 +56,8 @@ namespace Consolegram::Console::Pages::Home
         }
 
         std::cout
-                << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator
-                << View::Colorizer::SetBlackColor();
+            << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator
+            << View::Colorizer::SetBlackColor();
 
         return true;
     }

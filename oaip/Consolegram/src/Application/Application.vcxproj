@@ -30,9 +30,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthenticationService.h" />
+    <ClInclude Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesHandler.h" />
+    <ClInclude Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesResponse.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AuthenticationService.cpp" />
+    <ClCompile Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesHandler.cpp" />
+    <ClCompile Include="Chats\GetChatsWithLastMessages\GetChatsWithLastMessagesResponse.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
