@@ -58,8 +58,5 @@ namespace Consolegram::Console::Controls::Chat
                         return false;
                     });
         }
-
-        // remove remained \n
-        std::cin.get();
     }
 }

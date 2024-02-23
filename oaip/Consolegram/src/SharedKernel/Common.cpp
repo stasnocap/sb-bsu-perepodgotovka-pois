@@ -12,6 +12,7 @@ namespace Consolegram::SharedKernel::Common
         std::string input{};
         if (std::cin.peek() == ExitKey)
         {
+            std::cin.get();
             return {ExitKey};
         }
         

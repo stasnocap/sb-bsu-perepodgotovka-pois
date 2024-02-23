@@ -167,6 +167,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pages\AuthenticatePage.cpp" />
     <ClCompile Include="Pages\ChatPage.cpp" />
+    <ClCompile Include="Pages\GoodbyePage.cpp" />
+    <ClCompile Include="Pages\HelpPage.cpp" />
     <ClCompile Include="Pages\HomePage.cpp" />
     <ClCompile Include="View\Colorizer.cpp" />
     <ClCompile Include="View\Formatter.cpp" />
@@ -199,6 +201,8 @@
     <ClInclude Include="Controls\HomeControls.h" />
     <ClInclude Include="Pages\AuthenticatePage.h" />
     <ClInclude Include="Pages\ChatPage.h" />
+    <ClInclude Include="Pages\GoodbyePage.h" />
+    <ClInclude Include="Pages\HelpPage.h" />
     <ClInclude Include="Pages\HomePage.h" />
     <ClInclude Include="View\Colorizer.h" />
     <ClInclude Include="View\Formatter.h" />
