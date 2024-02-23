@@ -4,6 +4,7 @@
 #include "Controls/ChatControls.h"
 #include "Pages/HomePage.h"
 #include "Controls/HomeControls.h"
+#include "Pages/AuthenticatePage.h"
 #include "Pages/ChatPage.h"
 
 int SuccessExit()
@@ -29,7 +30,7 @@ int main(int argc, char* argv[])
 
     std::cout << "Tip: hit enter to exit or go back.\n";
 
-    const Users::User* currentUser{AuthenticationService::Authenticate(userRepository)};
+    const Users::User* currentUser{Pages::Authenticate::Show(userRepository)};
     if (!currentUser)
     {
         return SuccessExit();

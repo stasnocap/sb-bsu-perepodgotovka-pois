@@ -165,6 +165,7 @@
     <ClCompile Include="Controls\ChatControls.cpp" />
     <ClCompile Include="Controls\HomeControls.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pages\AuthenticatePage.cpp" />
     <ClCompile Include="Pages\ChatPage.cpp" />
     <ClCompile Include="Pages\HomePage.cpp" />
     <ClCompile Include="View\Colorizer.cpp" />
@@ -196,6 +197,7 @@
   <ItemGroup>
     <ClInclude Include="Controls\ChatControls.h" />
     <ClInclude Include="Controls\HomeControls.h" />
+    <ClInclude Include="Pages\AuthenticatePage.h" />
     <ClInclude Include="Pages\ChatPage.h" />
     <ClInclude Include="Pages\HomePage.h" />
     <ClInclude Include="View\Colorizer.h" />
