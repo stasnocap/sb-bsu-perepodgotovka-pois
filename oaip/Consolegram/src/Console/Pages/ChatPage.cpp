@@ -52,7 +52,7 @@ namespace Consolegram::Console::Pages::Chat
                 << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator;
         }
 
-        std::cout << View::Colorizer::SetBlackColor();
+        std::cout << View::Colorizer::SetWhiteColor();
 
         return true;
     }

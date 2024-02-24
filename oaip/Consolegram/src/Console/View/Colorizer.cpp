@@ -18,9 +18,9 @@ namespace Consolegram::Console::View::Colorizer
         return SetColor(1);
     }
 
-    std::string_view SetBlackColor()
+    std::string_view SetWhiteColor()
     {
-        return SetColor(0);
+        return SetColor(7);
     }
 
     std::string_view SetDarkYellowColor()

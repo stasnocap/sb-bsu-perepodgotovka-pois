@@ -10,7 +10,7 @@ namespace Consolegram::Console::View::Colorizer
 
     std::string_view SetBlueColor();
 
-    std::string_view SetBlackColor();
+    std::string_view SetWhiteColor();
 
     std::string_view SetDarkYellowColor();
 
