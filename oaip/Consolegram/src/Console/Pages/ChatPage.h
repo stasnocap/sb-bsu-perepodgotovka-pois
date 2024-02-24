@@ -5,7 +5,7 @@
 
 namespace Consolegram::Console::Pages::Chat
 {
-    void Show(
+    bool Show(
         const Domain::Chats::Chat* chat,
         Domain::Messages::MessageRepository& messageRepository,
         Domain::Users::UserRepository& userRepository);

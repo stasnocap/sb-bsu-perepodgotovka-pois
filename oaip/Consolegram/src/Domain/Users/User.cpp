@@ -5,7 +5,7 @@
 namespace Consolegram::Domain::Users
 {
     User::User(const long id, std::string userName, std::string password)
-        : SharedKernel::Entity(id), _name{std::move(userName)}, _password{std::move(password)}
+        : Entity(id), _name{std::move(userName)}, _password{std::move(password)}
     {
     }
 

@@ -10,11 +10,11 @@
 
 int main(int argc, char* argv[])
 {
-    using namespace Consolegram::SharedKernel;
+    using namespace Consolegram;
     using namespace Consolegram::Domain;
     using namespace Consolegram::Console;
 
-    Config config{};
+    SharedKernel::Config config{};
     config.Init(argc, argv);
 
     Users::UserRepository userRepository{config};
@@ -45,7 +45,10 @@ int main(int argc, char* argv[])
                 break;
             }
 
-            Pages::Chat::Show(selectedChat, messageRepository, userRepository);
+            if (!Pages::Chat::Show(selectedChat, messageRepository, userRepository))
+            {
+                break;
+            }
 
             Controls::Chat::WriteMessage(currentUser, selectedChat, messageRepository, participantRepository);
         }

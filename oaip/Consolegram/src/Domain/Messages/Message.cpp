@@ -7,7 +7,7 @@
 namespace Consolegram::Domain::Messages
 {
     Message::Message(const long id, const long userId, const long chatId, std::string text)
-        : SharedKernel::Entity(id), _userId{userId}, _chatId{chatId}, _text{std::move(text)}
+        : Entity(id), _userId{userId}, _chatId{chatId}, _text{std::move(text)}
     {
     }
 

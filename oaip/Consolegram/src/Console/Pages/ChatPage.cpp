@@ -12,12 +12,18 @@ namespace Consolegram::Console::Pages::Chat
 {
     using namespace Domain;
 
-    void Show(const Chats::Chat* chat, Messages::MessageRepository& messageRepository,
+    bool Show(const Chats::Chat* chat, Messages::MessageRepository& messageRepository,
               Users::UserRepository& userRepository)
     {
         const SharedKernel::ResultT getChatMessagesResult{
             Application::Messages::GetChatMessages::Handle(chat->GetId(), messageRepository, userRepository)
         };
+
+        if (getChatMessagesResult.IsFailure())
+        {
+            std::cout << getChatMessagesResult.GetError() << '\n';
+            return false;    
+        }
 
         std::cout
             << View::Colorizer::SetGrayColor() << View::Colorizer::ChatSeparator;
@@ -47,5 +53,7 @@ namespace Consolegram::Console::Pages::Chat
         }
 
         std::cout << View::Colorizer::SetBlackColor();
+
+        return true;
     }
 }

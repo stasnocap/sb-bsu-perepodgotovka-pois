@@ -5,7 +5,7 @@
 namespace Consolegram::Domain::Participants
 {
     Participant::Participant(const long id, const long userId, const long chatId, const bool canWrite)
-        : SharedKernel::Entity(id), _userId{userId}, _chatId{chatId}, _canWrite{canWrite}
+        : Entity(id), _userId{userId}, _chatId{chatId}, _canWrite{canWrite}
     {
     }
 
