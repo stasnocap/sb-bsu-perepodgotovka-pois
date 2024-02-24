@@ -7,6 +7,7 @@
 #include "Messages/CreateMessage/CreateMessageHandler.h"
 #include "Participants/ParticipantRepository.h"
 #include "Users/User.h"
+#include "../Input.h"
 
 namespace Consolegram::Console::Controls::Chat
 {
@@ -19,9 +20,9 @@ namespace Consolegram::Console::Controls::Chat
         {
             while (true)
             {
-                const std::string messageText{SharedKernel::Common::GetString("Please, write a message:")};
+                const std::string messageText{GetString("Please, write a message:")};
 
-                if (messageText[0] == SharedKernel::Common::ExitKey)
+                if (messageText[0] == ExitKey)
                 {
                     break;
                 }
@@ -37,9 +38,9 @@ namespace Consolegram::Console::Controls::Chat
         }
         else
         {
-            SharedKernel::Common::GetString("Hit enter to exit.", [](const std::string_view input)
+            GetString("Hit enter to exit.", [](const std::string_view input)
             {
-                if (input[0] == SharedKernel::Common::ExitKey)
+                if (input[0] == ExitKey)
                 {
                     return true;
                 }

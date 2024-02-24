@@ -2,29 +2,51 @@
 
 #include <iostream>
 
+#include "../Input.h"
 #include "Users/User.h"
 #include "Users/UserRepository.h"
-#include "Users/Authentication/AuthenticationHandler.h"
+#include "Users/GetUserByName/GetUserByNameHandler.h"
 
 namespace Consolegram::Console::Pages::Authenticate
 {
-    Domain::Users::User* Show(Domain::Users::UserRepository& usersRepository)
+    Domain::Users::User* Show(Domain::Users::UserRepository& userRepository)
     {
         std::cout << "Please, login.\n";
 
         while (true)
         {
-            SharedKernel::ResultT authenticationResult{
-                Application::Users::AuthenticationHandler::Handle(usersRepository)
+            const std::string userName{GetString("Enter username:")};
+
+            if (userName[0] == ExitKey)
+            {
+                return nullptr;
+            }
+
+            const SharedKernel::ResultT getByUserNameResult{
+                Application::Users::GetUserByName::Handle(userName, userRepository)
             };
 
-            if (authenticationResult.IsFailure())
+            if (getByUserNameResult.IsFailure())
             {
-                std::cout << authenticationResult.GetError() << '\n';
+                std::cout << getByUserNameResult.GetError() << '\n';
                 continue;
             }
 
-            return authenticationResult.GetValue();
+            const std::string password{GetString("Enter password:")};
+
+            if (password[0] == ExitKey)
+            {
+                return nullptr;
+            }
+
+            Domain::Users::User* user{getByUserNameResult.GetValue()};
+            if (user->GetPassword() != password)
+            {
+                std::cout << "Password is incorrect\n";
+                continue;
+            }
+
+            return user;
         }
     }
 }

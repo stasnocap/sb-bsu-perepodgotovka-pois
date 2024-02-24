@@ -4,5 +4,5 @@
 
 namespace Consolegram::Console::Pages::Authenticate
 {
-    Domain::Users::User* Show(Domain::Users::UserRepository& usersRepository);
+    Domain::Users::User* Show(Domain::Users::UserRepository& userRepository);
 }

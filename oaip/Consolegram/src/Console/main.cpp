@@ -52,6 +52,6 @@ int main(int argc, char* argv[])
     }
 
     Pages::Goodbye::Show();
-    
+
     return EXIT_SUCCESS;
 }

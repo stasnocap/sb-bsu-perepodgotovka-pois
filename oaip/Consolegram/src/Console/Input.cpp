@@ -1,10 +1,9 @@
-#include "Common.h"
+﻿#include "Input.h"
 
+#include <string_view>
 #include <cassert>
-#include <iostream>
-#include <string>
 
-namespace Consolegram::SharedKernel::Common
+namespace Consolegram::Console
 {
     std::string GetString(const std::string_view ask)
     {

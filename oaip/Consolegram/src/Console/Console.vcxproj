@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="Controls\ChatControls.cpp" />
     <ClCompile Include="Controls\HomeControls.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pages\AuthenticatePage.cpp" />
     <ClCompile Include="Pages\ChatPage.cpp" />
@@ -199,6 +200,7 @@
   <ItemGroup>
     <ClInclude Include="Controls\ChatControls.h" />
     <ClInclude Include="Controls\HomeControls.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Pages\AuthenticatePage.h" />
     <ClInclude Include="Pages\ChatPage.h" />
     <ClInclude Include="Pages\GoodbyePage.h" />

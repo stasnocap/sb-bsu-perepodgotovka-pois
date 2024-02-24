@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Common.h"
+#include "../Input.h"
 #include "Chats/ChatRepository.h"
 #include "Chats/GetChat/GetChatHandler.h"
 
@@ -13,9 +14,9 @@ namespace Consolegram::Console::Controls::Home
     Chats::Chat* SelectChat(Chats::ChatRepository& chatRepository)
     {
         Chats::Chat* chat{nullptr};
-        SharedKernel::Common::GetInt("Select a chat number:", [&chatRepository, &chat](const int chatId)
+        GetInt("Select a chat number:", [&chatRepository, &chat](const int chatId)
         {
-            if (chatId == SharedKernel::Common::ExitCode)
+            if (chatId == ExitCode)
             {
                 return true;
             }
