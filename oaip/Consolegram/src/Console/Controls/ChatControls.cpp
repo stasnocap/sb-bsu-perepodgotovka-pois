@@ -19,33 +19,19 @@ namespace Consolegram::Console::Controls::Chat
         {
             while (true)
             {
-                const std::string messageText{
-                    SharedKernel::Common::GetString("Please, write a message:", [](const std::string_view input)
-                    {
-                        if (input.size() >= Domain::Messages::MaxMessageTextLength)
-                        {
-                            std::cout
-                                << "Message length can't be more than " << Domain::Messages::MaxMessageTextLength
-                                << '\n';
-                            return false;
-                        }
-
-                        return true;
-                    })
-                };
+                const std::string messageText{SharedKernel::Common::GetString("Please, write a message:")};
 
                 if (messageText[0] == SharedKernel::Common::ExitKey)
                 {
                     break;
                 }
 
-                if (SharedKernel::Result createMessageResult{
+                if (const SharedKernel::Result createMessageResult{
                     Application::Messages::CreateMessage::Handle(user->GetId(), chat->GetId(), messageText,
                                                                  messageRepository)
                 }; createMessageResult.IsFailure())
                 {
                     std::cout << createMessageResult.GetError() << '\n';
-                    break;
                 }
             }
         }
