@@ -9,6 +9,14 @@ namespace Consolegram::Application::Messages::GetChatMessages
     {
         const std::vector messages{messageRepository.GetLastChatMessages(chatId)};
         const std::vector users{userRepository.GetUsersByMessages(messages)};
+
+        if (users.empty())
+        {
+            return SharedKernel::ResultT{
+                false, GetChatMessagesResponse{{}, {}}, "Users were not found"
+            };
+        }
+
         return SharedKernel::ResultT<GetChatMessagesResponse>::Success(GetChatMessagesResponse{users, messages});
     }
 }
