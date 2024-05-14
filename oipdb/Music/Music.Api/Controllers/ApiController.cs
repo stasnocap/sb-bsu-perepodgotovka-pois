@@ -7,7 +7,7 @@ namespace Music.Api.Controllers;
 [ApiController]
 public class ApiController : ControllerBase
 {
-    public IActionResult Problem(List<Error> errors)
+    protected IActionResult Problem(List<Error> errors)
     {
         HttpContext.Items[HttpContextItemKeys.Errors] = errors;
         
