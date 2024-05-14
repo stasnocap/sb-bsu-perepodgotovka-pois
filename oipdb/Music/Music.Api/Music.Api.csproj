@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <UserSecretsId>38dc638f-7aff-4b74-b4d5-5b97e5da4256</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Music.Contracts\Music.Contracts.csproj" />
+    <ProjectReference Include="..\Music.Application\Music.Application.csproj" />
+    <ProjectReference Include="..\Music.Infrastructure\Music.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
