@@ -1,8 +1,8 @@
 ﻿using ErrorOr;
 using MediatR;
+using Music.Application.Authentication.Common;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
-using Music.Application.Services;
 using Music.Domain.Common.Errors;
 using Music.Domain.Entities;
 
@@ -13,6 +13,8 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
 {
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
+        await Task.CompletedTask;
+        
         if (userRepository.GetUserByEmail(request.Email) is not User user)
         {
             return Errors.User.DuplicateEmail;

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Music.Api;
 using Music.Api.Common.Errors;
 using Music.Application;
 using Music.Infrastructure;
@@ -7,11 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
         .AddApplication()
-        .AddInfrastructure(builder.Configuration);
-    
-    builder.Services.AddControllers();
-    
-    builder.Services.AddSingleton<ProblemDetailsFactory, MusicProblemDetailsFactory>();
+        .AddInfrastructure(builder.Configuration)
+        .AddPresentation();
 }
 
 var app = builder.Build();

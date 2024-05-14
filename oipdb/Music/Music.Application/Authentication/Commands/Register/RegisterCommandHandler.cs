@@ -1,8 +1,8 @@
 ﻿using ErrorOr;
 using MediatR;
+using Music.Application.Authentication.Common;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
-using Music.Application.Services;
 using Music.Domain.Common.Errors;
 using Music.Domain.Entities;
 
@@ -11,8 +11,11 @@ namespace Music.Application.Authentication.Commands.Register;
 public class RegisterCommandHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
     : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
-    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request,
+        CancellationToken cancellationToken)
     {
+        await Task.CompletedTask;
+
         if (userRepository.GetUserByEmail(request.Email) is not null)
         {
             return Errors.User.DuplicateEmail;

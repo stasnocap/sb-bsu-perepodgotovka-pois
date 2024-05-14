@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Music.Application.Services;
+using Music.Application.Authentication.Common;
 
 namespace Music.Application.Authentication.Commands.Register;
 

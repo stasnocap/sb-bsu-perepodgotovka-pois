@@ -1,34 +1,32 @@
-﻿using MediatR;
+﻿using MapsterMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Music.Application.Authentication.Commands.Register;
 using Music.Application.Authentication.Queries.Login;
-using Music.Application.Services;
 using Music.Contracts.Authentication;
 
 namespace Music.Api.Controllers;
 
 [Route("auth")]
-public class AuthenticationController(ISender mediatr) : ApiController
+public class AuthenticationController(ISender mediatr, IMapper mapper) : ApiController
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        var registerResult =
-            await mediatr.Send(new RegisterCommand(request.FirstName, request.LastName, request.Email,
-                request.Password));
+        var command = mapper.Map<RegisterCommand>(request);
 
-        return registerResult.Match(result => Ok(Map(result)), Problem);
+        var result = await mediatr.Send(command);
+
+        return result.Match(r => Ok(mapper.Map<AuthenticationResponse>(r)), Problem);
     }
-
-    private static AuthenticationResponse Map(AuthenticationResult result) =>
-        new(result.User.Id, result.User.FirstName,
-            result.User.LastName, result.Email, result.Token);
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var loginResult = await mediatr.Send(new LoginQuery(request.Email, request.Password));
+        var query = mapper.Map<LoginQuery>(request);
 
-        return loginResult.Match(result => Ok(Map(result)), Problem);
+        var result = await mediatr.Send(query);
+
+        return result.Match(r => Ok(mapper.Map<AuthenticationResponse>(r)), Problem);
     }
 }

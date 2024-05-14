@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Music.Application.Services;
 
 namespace Music.Application;
 

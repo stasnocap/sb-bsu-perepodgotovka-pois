@@ -1,6 +1,6 @@
 ﻿using Music.Domain.Entities;
 
-namespace Music.Application.Services;
+namespace Music.Application.Authentication.Common;
 
 public record AuthenticationResult(
     User User,
