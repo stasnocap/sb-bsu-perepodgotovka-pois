@@ -3,11 +3,11 @@
 public abstract class Entity<TId> : IEquatable<Entity<TId>>
     where TId : notnull
 {
-    public TId Id { get; protected set; }
+    public TId ArtistId { get; protected set; }
 
-    protected Entity(TId id)
+    protected Entity(TId artistId)
     {
-        Id = id;
+        ArtistId = artistId;
     }
 
     public bool Equals(Entity<TId>? other)
@@ -17,7 +17,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override bool Equals(object? obj)
     {
-        return obj is Entity<TId> entity && Id.Equals(entity.Id);
+        return obj is Entity<TId> entity && ArtistId.Equals(entity.ArtistId);
     }
 
     public static bool operator ==(Entity<TId> left, Entity<TId> right)
@@ -32,6 +32,6 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override int GetHashCode()
     {
-        return Id.GetHashCode();
+        return ArtistId.GetHashCode();
     }
 }
