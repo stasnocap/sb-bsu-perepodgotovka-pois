@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Music.Application.Authentication.Commands.Register;
 using Music.Application.Authentication.Queries.Login;
@@ -8,6 +9,7 @@ using Music.Contracts.Authentication;
 namespace Music.Api.Controllers;
 
 [Route("auth")]
+[AllowAnonymous]
 public class AuthenticationController(ISender mediatr, IMapper mapper) : ApiController
 {
     [HttpPost("register")]
