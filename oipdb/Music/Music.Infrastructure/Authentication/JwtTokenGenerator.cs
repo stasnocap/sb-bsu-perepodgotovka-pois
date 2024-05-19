@@ -17,6 +17,8 @@ public class JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtS
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Value.Secret)),
             SecurityAlgorithms.HmacSha256);
 
+        
+        
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
