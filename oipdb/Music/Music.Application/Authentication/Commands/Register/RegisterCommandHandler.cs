@@ -3,8 +3,8 @@ using MediatR;
 using Music.Application.Authentication.Common;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
-using Music.Domain.Common.Errors;
-using Music.Domain.Entities;
+using Music.Domain.User;
+using Music.Domain.User.Errors;
 
 namespace Music.Application.Authentication.Commands.Register;
 
@@ -14,22 +14,14 @@ public class RegisterCommandHandler(IUserRepository userRepository, IJwtTokenGen
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request,
         CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-
-        if (userRepository.GetUserByEmail(request.Email) is not null)
+        if (await userRepository.GetUserByEmailAsync(request.Email, cancellationToken) is not null)
         {
             return Errors.User.DuplicateEmail;
         }
 
-        var user = new User
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            Password = request.Password
-        };
+        var user = User.Create(request.FirstName, request.LastName, request.Email, request.Password);
 
-        userRepository.Add(user);
+        await userRepository.AddAsync(user, cancellationToken);
 
         var token = jwtTokenGenerator.GenerateToken(user);
 

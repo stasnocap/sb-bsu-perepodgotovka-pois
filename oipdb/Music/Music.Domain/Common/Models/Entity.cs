@@ -1,13 +1,17 @@
 ﻿namespace Music.Domain.Common.Models;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>
+public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     where TId : notnull
 {
-    public TId ArtistId { get; protected set; }
+    private readonly List<IDomainEvent> _domainEvents = new();
 
-    protected Entity(TId artistId)
+    public TId Id { get; protected set; }
+
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    protected Entity(TId id)
     {
-        ArtistId = artistId;
+        Id = id;
     }
 
     public bool Equals(Entity<TId>? other)
@@ -17,7 +21,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override bool Equals(object? obj)
     {
-        return obj is Entity<TId> entity && ArtistId.Equals(entity.ArtistId);
+        return obj is Entity<TId> entity && Id.Equals(entity.Id);
     }
 
     public static bool operator ==(Entity<TId> left, Entity<TId> right)
@@ -32,6 +36,16 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override int GetHashCode()
     {
-        return ArtistId.GetHashCode();
+        return Id.GetHashCode();
+    }
+    
+    public void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
     }
 }

@@ -1,9 +1,9 @@
-﻿using Music.Domain.Entities;
+﻿using Music.Domain.User;
 
 namespace Music.Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository
 {
-    User? GetUserByEmail(string email);
-    void Add(User user);
+    Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
+    Task AddAsync(User user, CancellationToken cancellationToken);
 }

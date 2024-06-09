@@ -1,10 +1,30 @@
-﻿namespace Music.Domain.Entities;
+﻿using Music.Domain.Common.Models;
+using Music.Domain.User.Events;
+using Music.Domain.User.ValueObjects;
 
-public class User
+namespace Music.Domain.User;
+
+public sealed class User : AggregateRoot<UserId>
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public string FirstName { get; set; } = null!;
-    public string LastName { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string Email { get; }
+    public string Password { get; }
+
+    private User(UserId id, string firstName, string lastName, string email, string password) : base(id)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Password = password;
+    }
+
+    public static User Create(string firstName, string lastName, string email, string password)
+    {
+        var user = new User(UserId.CreateUnique(), firstName, lastName, email, password);
+        
+        user.AddDomainEvent(new UserCreatedDomainEvent(user));
+
+        return user;
+    }
 }

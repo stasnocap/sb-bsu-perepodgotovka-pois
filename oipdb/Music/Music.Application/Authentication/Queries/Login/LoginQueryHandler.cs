@@ -3,8 +3,8 @@ using MediatR;
 using Music.Application.Authentication.Common;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
-using Music.Domain.Common.Errors;
-using Music.Domain.Entities;
+using Music.Domain.User;
+using Music.Domain.User.Errors;
 
 namespace Music.Application.Authentication.Queries.Login;
 
@@ -15,7 +15,7 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
     {
         await Task.CompletedTask;
         
-        if (userRepository.GetUserByEmail(request.Email) is not User user)
+        if (await userRepository.GetUserByEmailAsync(request.Email, cancellationToken) is not { } user)
         {
             return Errors.User.DuplicateEmail;
         }

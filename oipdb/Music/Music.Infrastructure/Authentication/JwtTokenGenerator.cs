@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Services;
-using Music.Domain.Entities;
+using Music.Domain.User;
 
 namespace Music.Infrastructure.Authentication;
 

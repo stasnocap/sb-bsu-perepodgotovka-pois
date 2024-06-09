@@ -9,6 +9,8 @@ using Music.Application.Common.Interfaces.Persistence;
 using Music.Application.Common.Interfaces.Services;
 using Music.Infrastructure.Authentication;
 using Music.Infrastructure.Persistence;
+using Music.Infrastructure.Persistence.Interceptors;
+using Music.Infrastructure.Persistence.Repositories;
 using Music.Infrastructure.Services;
 
 namespace Music.Infrastructure;
@@ -21,6 +23,7 @@ public static class DependencyInjection
         services.AddAuth(configuration);
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
+        services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }

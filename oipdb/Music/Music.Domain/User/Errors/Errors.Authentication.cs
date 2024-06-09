@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 
-namespace Music.Domain.Common.Errors;
+namespace Music.Domain.User.Errors;
 
 public static partial class Errors
 {
