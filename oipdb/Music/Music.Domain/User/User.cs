@@ -9,19 +9,18 @@ public sealed class User : AggregateRoot<UserId>
     public FirstName FirstName { get; }
     public LastName LastName { get; }
     public Email Email { get; }
-    public Password Password { get; }
+    public PasswordHash PasswordHash { get; set; }
 
-    private User(UserId id, FirstName firstName, LastName lastName, Email email, Password password) : base(id)
+    private User(UserId id, FirstName firstName, LastName lastName, Email email) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
-        Password = password;
     }
 
-    public static User Create(FirstName firstName, LastName lastName, Email email, Password password)
+    public static User Create(FirstName firstName, LastName lastName, Email email)
     {
-        var user = new User(UserId.CreateUnique(), firstName, lastName, email, password);
+        var user = new User(UserId.CreateUnique(), firstName, lastName, email);
         
         user.AddDomainEvent(new UserCreatedDomainEvent(user));
 

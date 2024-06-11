@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -7,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
 using Music.Application.Common.Interfaces.Services;
+using Music.Domain.User;
 using Music.Infrastructure.Authentication;
 using Music.Infrastructure.Persistence;
 using Music.Infrastructure.Persistence.Interceptors;
@@ -24,6 +26,7 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         services.AddScoped<PublishDomainEventsInterceptor>();
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }

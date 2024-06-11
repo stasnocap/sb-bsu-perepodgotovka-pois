@@ -1,25 +1,29 @@
 ﻿using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Music.Application.Authentication.Common;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
+using Music.Domain.User;
 using Music.Domain.User.Errors;
 
 namespace Music.Application.Authentication.Queries.Login;
 
-public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher<User> _passwordHasher)
     : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
 {
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
+        var user = await userRepository.SingleOrDefaultAsync(request.Email, cancellationToken);
         
-        if (await userRepository.SingleOrDefaultAsync(request.Email, cancellationToken) is not { } user)
+        if (user is null)
         {
-            return Errors.User.DuplicateEmail;
+            return Errors.User.NotFound;
         }
 
-        if (user.Password.Value != request.Password)
+        var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash.Value, request.Password);
+
+        if (passwordVerificationResult == PasswordVerificationResult.Failed)
         {
             return Errors.Authentication.InvalidCredentials;
         }

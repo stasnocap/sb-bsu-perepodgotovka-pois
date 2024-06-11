@@ -30,11 +30,15 @@ public class UserRepository(IConfiguration configuration, PublishDomainEventsInt
         await BeginTransactionAsync(cancellationToken);
 
         const string sql =
-            @"INSERT INTO ""Users""(""Id"", ""FirstName"", ""LastName"", ""Email"", ""Password"") VALUES (@Id, @FirstName, @LastName, @Email, @Password)";
+            @"INSERT INTO ""Users""(""Id"", ""FirstName"", ""LastName"", ""Email"", ""PasswordHash"") VALUES (@Id, @FirstName, @LastName, @Email, @PasswordHash)";
 
         await Connection.ExecuteAsync(sql, new
         {
-            Id = user.Id.Value, user.FirstName, user.LastName, user.Email, user.Password
+            Id = user.Id.Value,
+            FirstName = user.FirstName.Value,
+            LastName = user.LastName.Value,
+            Email = user.Email.Value,
+            PasswordHash = user.PasswordHash.Value
         });
 
         await CommitAsync([user], cancellationToken);
@@ -57,14 +61,14 @@ public class UserRepository(IConfiguration configuration, PublishDomainEventsInt
         private static readonly ConstructorInfo EmailConstructor =
             typeof(Email).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)[0];
         
-        private static readonly ConstructorInfo PasswordConstructor =
-            typeof(Password).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)[0];
+        private static readonly ConstructorInfo PasswordHashConstructor =
+            typeof(PasswordHash).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)[0];
 
         public Guid Id { get; init; }
         public string FirstName { get; init; }
         public string LastName { get; init; }
         public string Email { get; init; }
-        public string Password { get; init; }
+        public string PasswordHash { get; init; }
 
         public User ToUser()
         {
@@ -72,9 +76,10 @@ public class UserRepository(IConfiguration configuration, PublishDomainEventsInt
             var firstName = FirstNameConstructor.Invoke([FirstName]);
             var lastName = LastNameConstructor.Invoke([LastName]);
             var email = EmailConstructor.Invoke([Email]);
-            var password = PasswordConstructor.Invoke([Password]);
-            var user = Constructor.Invoke([userId, firstName, lastName, email, password]);
-            return (User)user;
+            var passwordHash = (PasswordHash)PasswordHashConstructor.Invoke([PasswordHash]);
+            var user = (User)Constructor.Invoke([userId, firstName, lastName, email]);
+            user.PasswordHash = passwordHash;
+            return user;
         }
     }
 }
