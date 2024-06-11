@@ -4,11 +4,11 @@ namespace Music.Domain.User.ValueObjects;
 
 public class UserId : ValueObject
 {
-    public Guid Id { get; }
+    public Guid Value { get; }
 
-    private UserId(Guid id)
+    private UserId(Guid value)
     {
-        Id = id;
+        Value = value;
     }
     
     public static UserId CreateUnique()
@@ -18,6 +18,6 @@ public class UserId : ValueObject
     
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Id;
+        yield return Value;
     }
 }

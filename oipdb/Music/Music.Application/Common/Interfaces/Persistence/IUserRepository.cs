@@ -4,6 +4,6 @@ namespace Music.Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository
 {
-    Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
+    Task<User?> SingleOrDefaultAsync(string email, CancellationToken cancellationToken);
     Task AddAsync(User user, CancellationToken cancellationToken);
 }

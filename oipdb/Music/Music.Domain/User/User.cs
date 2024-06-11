@@ -6,12 +6,12 @@ namespace Music.Domain.User;
 
 public sealed class User : AggregateRoot<UserId>
 {
-    public string FirstName { get; }
-    public string LastName { get; }
-    public string Email { get; }
-    public string Password { get; }
+    public FirstName FirstName { get; }
+    public LastName LastName { get; }
+    public Email Email { get; }
+    public Password Password { get; }
 
-    private User(UserId id, string firstName, string lastName, string email, string password) : base(id)
+    private User(UserId id, FirstName firstName, LastName lastName, Email email, Password password) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -19,7 +19,7 @@ public sealed class User : AggregateRoot<UserId>
         Password = password;
     }
 
-    public static User Create(string firstName, string lastName, string email, string password)
+    public static User Create(FirstName firstName, LastName lastName, Email email, Password password)
     {
         var user = new User(UserId.CreateUnique(), firstName, lastName, email, password);
         

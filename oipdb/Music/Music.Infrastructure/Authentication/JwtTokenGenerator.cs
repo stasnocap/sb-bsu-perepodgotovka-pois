@@ -21,9 +21,9 @@ public class JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtS
         
         var claims = new Claim[]
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
-            new(JwtRegisteredClaimNames.FamilyName, user.LastName),
+            new(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+            new(JwtRegisteredClaimNames.GivenName, user.FirstName.Value),
+            new(JwtRegisteredClaimNames.FamilyName, user.LastName.Value),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

@@ -17,7 +17,7 @@ public class AuthenticationController(ISender mediatr, IMapper mapper) : ApiCont
     {
         var command = mapper.Map<RegisterCommand>(request);
 
-        var result = await mediatr.Send(command);
+        var result = await mediatr.Send(command, HttpContext.RequestAborted);
 
         return result.Match(r => Ok(mapper.Map<AuthenticationResponse>(r)), Problem);
     }
@@ -27,7 +27,7 @@ public class AuthenticationController(ISender mediatr, IMapper mapper) : ApiCont
     {
         var query = mapper.Map<LoginQuery>(request);
 
-        var result = await mediatr.Send(query);
+        var result = await mediatr.Send(query, HttpContext.RequestAborted);
 
         return result.Match(r => Ok(mapper.Map<AuthenticationResponse>(r)), Problem);
     }
