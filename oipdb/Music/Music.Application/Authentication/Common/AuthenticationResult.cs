@@ -1,4 +1,4 @@
-﻿using Music.Domain.User;
+﻿using Music.Domain.Users;
 
 namespace Music.Application.Authentication.Common;
 

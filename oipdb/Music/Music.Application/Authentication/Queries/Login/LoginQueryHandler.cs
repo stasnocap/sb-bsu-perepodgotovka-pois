@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Music.Application.Authentication.Common;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
-using Music.Domain.User;
-using Music.Domain.User.Errors;
+using Music.Domain.Users;
+using Music.Domain.Users.Errors;
 
 namespace Music.Application.Authentication.Queries.Login;
 

@@ -1,0 +1,8 @@
+﻿PUT {{host}}/artists
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "id": "9afbdc9e-fef6-46de-b26c-42abc9cfe040",
+  "name": "Ken Carson"
+}

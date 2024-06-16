@@ -1,4 +1,2 @@
-﻿@host=https://localhost:7034
-
-GET {{host}}/artists
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4OGFkOWQ0OS1iNGNhLTQ1ZmQtYmMyYy02YzMyNGVhZWEwMmEiLCJnaXZlbl9uYW1lIjoiU3RhcyIsImZhbWlseV9uYW1lIjoiS2FwaXRhbiIsImp0aSI6ImUyMjNjOTJjLTk0ZjQtNGQwNy1iYjkzLWIzNmIxOGMwMzY4ZiIsImV4cCI6MTcxNjEzNjgzNCwiaXNzIjoiTXVzaWMiLCJhdWQiOiJNdXNpYyJ9._MznDBHzR8-0LfKqlkTQyyzxUWvsxBTDF523_hzHNIU
+﻿GET {{host}}/artists
+Authorization: Bearer {{auth_token}}

@@ -2,8 +2,8 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Music.Application.Common.Interfaces.Persistence;
-using Music.Domain.User;
-using Music.Domain.User.ValueObjects;
+using Music.Domain.Users;
+using Music.Domain.Users.ValueObjects;
 using Music.Infrastructure.Persistence.Interceptors;
 using BindingFlags = System.Reflection.BindingFlags;
 

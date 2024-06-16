@@ -1,0 +1,7 @@
+﻿POST {{host}}/artists
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Playboi Carti"
+}

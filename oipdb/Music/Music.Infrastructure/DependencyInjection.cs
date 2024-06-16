@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Music.Application.Common.Interfaces.Authentication;
 using Music.Application.Common.Interfaces.Persistence;
 using Music.Application.Common.Interfaces.Services;
-using Music.Domain.User;
+using Music.Domain.Users;
 using Music.Infrastructure.Authentication;
 using Music.Infrastructure.Persistence;
 using Music.Infrastructure.Persistence.Interceptors;
@@ -28,6 +28,8 @@ public static class DependencyInjection
         services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IArtistRepository, ArtistRepository>();
+        
         return services;
     }
 

@@ -34,7 +34,7 @@ create table "Users"
     "FirstName" varchar(255) not null,
     "Email"     varchar(255) not null,
     "LastName"  varchar(255) not null,
-    "Password"  varchar(255) not null
+    "PasswordHash"  varchar(255) not null
 );
 
 create table "LikedTracks"
