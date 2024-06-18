@@ -1,20 +1,20 @@
 ﻿create table "Artists"
 (
-    "Id"   uuid         not null
+    "Id"   uuid default gen_random_uuid() not null
         primary key,
-    "Name" varchar(255) not null
+    "Name" varchar(255)                   not null
 );
 
 create table "Albums"
 (
-    "Id"   uuid         not null
+    "Id"   uuid default gen_random_uuid() not null
         primary key,
-    "Name" varchar(255) not null
+    "Name" varchar(255)                   not null
 );
 
 create table "Tracks"
 (
-    "Id"       uuid         not null
+    "Id"       uuid default gen_random_uuid() not null
         primary key,
     "ArtistId" uuid
         constraint fk_artist
@@ -24,22 +24,22 @@ create table "Tracks"
         constraint fk_album
             references "Albums"
             on delete cascade,
-    "Name"     varchar(255) not null
+    "Name"     varchar(255)                   not null
 );
 
 create table "Users"
 (
-    "Id"        uuid         not null
+    "Id"           uuid default gen_random_uuid() not null
         primary key,
-    "FirstName" varchar(255) not null,
-    "Email"     varchar(255) not null,
-    "LastName"  varchar(255) not null,
-    "PasswordHash"  varchar(255) not null
+    "FirstName"    varchar(255)                   not null,
+    "Email"        varchar(255)                   not null,
+    "LastName"     varchar(255)                   not null,
+    "PasswordHash" varchar(255)                   not null
 );
 
 create table "LikedTracks"
 (
-    "Id"      uuid not null
+    "Id"      uuid default gen_random_uuid() not null
         primary key,
     "TrackId" uuid
         constraint fk_track
@@ -48,12 +48,13 @@ create table "LikedTracks"
     "UserId"  uuid
         constraint fk_user
             references "Users"
-            on delete cascade
+            on delete cascade,
+    unique ("TrackId", "UserId")
 );
 
 create table "Followers"
 (
-    "Id"       uuid not null
+    "Id"       uuid default gen_random_uuid() not null
         primary key,
     "ArtistId" uuid
         constraint fk_artist
@@ -62,5 +63,6 @@ create table "Followers"
     "UserId"   uuid
         constraint fk_user
             references "Users"
-            on delete cascade
+            on delete cascade,
+    unique ("ArtistId", "UserId")
 );

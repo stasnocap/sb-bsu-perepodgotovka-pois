@@ -1,0 +1,1 @@
+INSERT INTO "Followers" ("ArtistId", "UserId") VALUES ('661d4566-3fbd-443e-b35f-5c79f87ecbfe', '00176d52-0601-4843-9ac3-ecc931f8585c');

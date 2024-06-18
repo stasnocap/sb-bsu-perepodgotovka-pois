@@ -1,12 +1,12 @@
-with Artist as (
+with Artist AS (
     insert into "Artists" ("Name")
-        values ('Yeat')
+        VALUES ('Yeat')
         returning "Artists"."Id"),
-     Album as (insert into "Albums" ("ArtistId", "Name")
+     Album AS (insert into "Albums" ("Id", "Name")
          select Artist."Id",
                 ('Up 2 me')
          from Artist
-         returning "Albums"."Id", "ArtistId")
+         returning "Albums"."Id", "Id" AS ArtistId)
 insert into "Tracks" ("ArtistId", "AlbumId", "Name")
-select "ArtistId", Album."Id", 'Cmon'
+select ArtistId, Album."Id", 'Cmon'
 from Album;

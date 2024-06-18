@@ -1,0 +1,1 @@
+INSERT INTO "Artists" ("Name") VALUES ('Artist name');

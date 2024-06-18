@@ -1,0 +1,1 @@
+INSERT INTO "LikedTracks" ("TrackId", "UserId") VALUES ('82addad2-081c-468f-8ff3-0c9386211e3f', '00176d52-0601-4843-9ac3-ecc931f8585c');

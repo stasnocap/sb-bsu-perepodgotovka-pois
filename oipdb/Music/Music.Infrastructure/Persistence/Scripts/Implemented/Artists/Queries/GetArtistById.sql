@@ -1,0 +1,1 @@
+SELECT * FROM "Artists" WHERE "Id" = '60f68283-0de2-439d-90d3-6a28132194c3';

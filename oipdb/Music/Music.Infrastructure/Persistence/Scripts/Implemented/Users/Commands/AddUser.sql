@@ -1,0 +1,1 @@
+INSERT INTO "Users"("FirstName", "LastName", "Email", "PasswordHash") VALUES ('Stas', 'Kapitan', 'stasnocap@gmail.com', 'AQAAAAIAAYagAAAAEH4OacJF9Ba7fhwK9GGC5BFcZl+rdTLmiMUGTQNxqg55vhNrHOY9660hyRH2lDeTDA==');
