@@ -19,5 +19,3 @@ values ('4d0ef30a-c50c-4e30-9c73-47c6e24f82b2', 'Pop'),
        (default, 'New-age music'),
        (default, 'Acousmatic music')
 ;
-
-truncate table "Genres" cascade ;

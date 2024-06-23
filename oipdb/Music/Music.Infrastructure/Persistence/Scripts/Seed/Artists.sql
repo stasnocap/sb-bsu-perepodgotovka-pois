@@ -1,7 +1,7 @@
 insert into "Artists" ("Id", "Name")
 values 
     ('b2695d4a-1600-4069-904c-ee3f39fd0bee', 'Taylor Swift'),
-    (default, 'Michael Jackson'),
+    ('', 'Michael Jackson'),
     (default, 'Katy Perry'),
     (default, 'Madonna'),
     (default, 'Eminem'),
@@ -12,6 +12,3 @@ values
     (default, 'Elvis Presley'),
     (default, 'Britney Spears'),
     (default, 'Tupac Shakur')
-;
-
-truncate  table "Artists"cascade ;

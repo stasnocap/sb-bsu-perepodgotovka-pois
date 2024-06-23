@@ -1,0 +1,1 @@
+﻿select * from recommended_tracks('00176d52-0601-4843-9ac3-ecc931f8585c', current_timestamp - INTERVAL '7 days');
