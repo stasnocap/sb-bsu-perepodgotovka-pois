@@ -1,3 +1,3 @@
-﻿namespace Music.Contracts.Artists;
+﻿namespace Music.Contracts.Artists.Requests;
 
 public record CreateArtistRequest(string Name);

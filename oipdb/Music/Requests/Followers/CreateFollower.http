@@ -1,0 +1,7 @@
+﻿POST {{host}}/followers
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "artistId": "34539fac-d526-4b46-a5b9-c16d89c69441"
+}

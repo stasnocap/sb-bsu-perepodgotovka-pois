@@ -1,0 +1,2 @@
+﻿GET {{host}}/tracks/recommended
+Authorization: Bearer {{auth_token}}

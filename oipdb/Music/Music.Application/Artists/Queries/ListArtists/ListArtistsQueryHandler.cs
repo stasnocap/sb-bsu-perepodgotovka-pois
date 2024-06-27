@@ -11,7 +11,7 @@ public class ListArtistsQueryHandler(IArtistRepository _artistRepository) : IReq
     {
         var artists = await _artistRepository.GetAllAsync(cancellationToken);
         return artists
-            .Select<Artist, ArtistResult>(a => new ArtistResult(a.Id.Value, a.Name.Value))
+            .Select(a => new ArtistResult(a.Id.Value, a.Name.Value))
             .ToList();
     }
 }

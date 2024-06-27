@@ -24,6 +24,18 @@ public class UserRepository(IConfiguration configuration, PublishDomainEventsInt
 
         return user;
     }
+    
+    public async Task<User?> SingleOrDefaultAsync(UserId userId, CancellationToken cancellationToken)
+    {
+        const string sql = @"SELECT * FROM ""Users"" WHERE ""Email"" = @Id";
+
+        var user = (await Connection.QueryAsync<User>(sql, [typeof(UserDto)], 
+                objs => ((UserDto)objs[0]).ToUser(), 
+                new { Id = userId.Value }))
+            .SingleOrDefault();
+
+        return user;
+    }
 
     public async Task AddAsync(User user, CancellationToken cancellationToken)
     {

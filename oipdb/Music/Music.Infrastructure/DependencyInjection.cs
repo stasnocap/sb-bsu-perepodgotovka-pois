@@ -24,11 +24,16 @@ public static class DependencyInjection
     {
         services.AddAuth(configuration);
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserContext, UserContext>();
 
         services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IArtistRepository, ArtistRepository>();
+        services.AddScoped<IFollowerRepository, FollowerRepository>();
+        services.AddScoped<ILikedTrackRepository, LikedTrackRepository>();
+        services.AddScoped<ITrackRepository, TrackRepository>();
         
         return services;
     }

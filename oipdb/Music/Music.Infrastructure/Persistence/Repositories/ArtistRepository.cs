@@ -1,9 +1,13 @@
 ﻿using System.Reflection;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Music.Application.Artists.Common;
+using Music.Application.Artists.Queries.FansAlsoLikeArtists;
+using Music.Application.Artists.Queries.ListMostPopularArtists;
 using Music.Application.Common.Interfaces.Persistence;
 using Music.Domain.Artists;
 using Music.Domain.Artists.ValueObjects;
+using Music.Domain.Users.ValueObjects;
 using Music.Infrastructure.Persistence.Interceptors;
 
 namespace Music.Infrastructure.Persistence.Repositories;
@@ -67,6 +71,28 @@ public class ArtistRepository(IConfiguration configuration, PublishDomainEventsI
             objs => ((ArtistDto)objs[0]).ToArtist()))
             .ToList();
 
+        return artists;
+    }
+
+    public async Task<List<PopularArtistResult>> ListMostPopularArtistsAsync(CancellationToken cancellationToken)
+    {
+        const string sql = @"SELECT ""ArtistId"", ""Name"", count(*) AS ""Followers""
+                             FROM ""Artists"" A
+                                 JOIN ""Followers"" F on A.""Id"" = F.""ArtistId""
+                             GROUP BY F.""ArtistId"", ""Name""
+                             ORDER BY ""Followers"";";
+        
+        var artists = (await Connection.QueryAsync<PopularArtistResult>(sql)).ToList();
+
+        return artists;
+    }
+
+    public async Task<List<FansAlsoLikeArtistResult>> FansAlsoLikeArtistsAsync(ArtistId artistId, UserId userId, CancellationToken cancellationToken)
+    {
+        const string sql = @"SELECT A.""Id"" AS ""ArtistId"", A.""Name"" AS ""ArtistName"" from fans_also_like_artists(@ArtistId, @UserId) A;";
+        
+        var artists = (await Connection.QueryAsync<FansAlsoLikeArtistResult>(sql, param: new { ArtistId = artistId.Value, UserId = userId.Value })).ToList();
+    
         return artists;
     }
 

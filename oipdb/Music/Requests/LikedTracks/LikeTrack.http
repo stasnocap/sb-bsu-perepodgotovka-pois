@@ -1,0 +1,7 @@
+﻿POST {{host}}/LikedTracks
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "trackId": "30b48664-5d02-46a7-8563-e32d75c10e9f"
+}

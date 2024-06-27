@@ -7,9 +7,9 @@ using Music.Domain.Artists.ValueObjects;
 
 namespace Music.Application.Artists.Commands.CreateArtist;
 
-public class CreateArtistCommandHandler(IArtistRepository _artistRepository) : IRequestHandler<CreateArtistCommand, ErrorOr<Guid>>
+public class CreateArtistCommandHandler(IArtistRepository _artistRepository) : IRequestHandler<CreateArtistCommand, ErrorOr<ArtistId>>
 {
-    public async Task<ErrorOr<Guid>> Handle(CreateArtistCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<ArtistId>> Handle(CreateArtistCommand request, CancellationToken cancellationToken)
     {
         var errors = new List<Error>();
 
@@ -31,6 +31,6 @@ public class CreateArtistCommandHandler(IArtistRepository _artistRepository) : I
 
         await _artistRepository.AddAsync(artist, cancellationToken);
 
-        return artist.Id.Value;
+        return artist.Id;
     }
 }

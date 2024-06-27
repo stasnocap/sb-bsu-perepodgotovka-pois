@@ -1,0 +1,2 @@
+﻿GET {{host}}/tracks/discover-weekly
+Authorization: Bearer {{auth_token}}

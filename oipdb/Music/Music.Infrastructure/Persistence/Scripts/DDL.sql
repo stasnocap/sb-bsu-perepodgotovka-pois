@@ -86,14 +86,7 @@ create table "LikedTracks"
 );
 
 create function get_tracks(search_term character varying DEFAULT NULL::character varying, page integer DEFAULT 1, page_size integer DEFAULT 10)
-    returns TABLE
-            (
-                "Id"       uuid,
-                "ArtistId" uuid,
-                "AlbumId"  uuid,
-                "Name"     character varying,
-                "GenreId"  uuid
-            )
+    returns TABLE("Id" uuid, "ArtistId" uuid, "AlbumId" uuid, "Name" character varying, "GenreId" uuid)
     language plpgsql
 as
 $$
@@ -111,11 +104,7 @@ end;
 $$;
 
 create function get_artists(search_term character varying DEFAULT NULL::character varying, page integer DEFAULT 1, page_size integer DEFAULT 10)
-    returns TABLE
-            (
-                "Id"   uuid,
-                "Name" character varying
-            )
+    returns TABLE("Id" uuid, "Name" character varying)
     language plpgsql
 as
 $$
@@ -129,12 +118,7 @@ end;
 $$;
 
 create function get_albums(search_term character varying DEFAULT NULL::character varying, page integer DEFAULT 1, page_size integer DEFAULT 10)
-    returns TABLE
-            (
-                "Id"        uuid,
-                "Name"      character varying,
-                "CreatedOn" timestamp with time zone
-            )
+    returns TABLE("Id" uuid, "Name" character varying, "CreatedOn" timestamp with time zone)
     language plpgsql
 as
 $$
@@ -147,13 +131,32 @@ begin
 end;
 $$;
 
-create function recommended_tracks(user_id uuid, on_date timestamp with time zone DEFAULT NULL::timestamp with time zone, count_of_first_most_liked_genres integer DEFAULT 5, search_term character varying DEFAULT NULL::character varying, page integer DEFAULT 1, page_size integer DEFAULT 10)
-    returns TABLE
-            (
-                "TrackId"     uuid,
-                "Artist Name" character varying,
-                "Track Name"  character varying
-            )
+create function fans_also_like_artists(artist_id uuid, user_id uuid)
+    returns TABLE("Id" uuid, "Name" character varying)
+    language plpgsql
+as
+$$
+begin
+    -- находим пользователей кто тоже подписан на нашего артиста
+    return query with followers as (select F."UserId"
+                                    from "Followers" F
+                                    where "ArtistId" = artist_id
+                                      and "UserId" <> user_id
+                                    limit 5)
+-- находим артистов на которые подписаны найденные пользователи
+                 select F."ArtistId", A."Name" as "ArtistName"
+                 from "Artists" A
+                          join "Followers" F on f."ArtistId" = A."Id"
+                 where F."UserId" in (select followers."UserId" from followers)
+                   and F."ArtistId" <> artist_id
+                   and F."UserId" <> user_id
+                 group by F."ArtistId", A."Name"
+                 order by count(*);
+end;
+$$;
+
+create function recommended_tracks(user_id uuid, on_date timestamp with time zone DEFAULT NULL::timestamp with time zone, count_of_first_most_liked_genres integer DEFAULT 5)
+    returns TABLE("TrackId" uuid, "ArtistName" character varying, "TrackName" character varying)
     language plpgsql
 as
 $$
@@ -170,8 +173,8 @@ begin
                                  limit count_of_first_most_liked_genres)
 
                  -- рекомендованные популярные треки по жанрам
-                 select T."Id" as "TrackId", A."Name" as "Artist Name", T."Name" as "Track Name"
-                 from get_tracks(search_term, page, page_size) T
+                 select T."Id" as "TrackId", A."Name" as "ArtistName", T."Name" as "TrackName"
+                 from "Tracks" T
                           join public."Genres" G on G."Id" = T."GenreId"
                           join public."LikedTracks" LT on T."Id" = LT."TrackId"
                           join public."Artists" A on T."ArtistId" = A."Id"
@@ -179,34 +182,6 @@ begin
                  where "GenreId" in (select "GenreId" from genres)
                    and LT."UserId" <> user_id
                    and (case when (on_date is null) then true else "CreatedOn" > on_date end);
-end;
-$$;
-
-create function fans_also_like_artists(artist_id uuid, user_id uuid, search_term character varying DEFAULT NULL::character varying, page integer DEFAULT 1, page_size integer DEFAULT 10)
-    returns TABLE
-            (
-                "Id"   uuid,
-                "Name" character varying
-            )
-    language plpgsql
-as
-$$
-begin
-    -- находим пользователей кто тоже подписан на нашего артиста
-    return query with followers as (select F."UserId"
-                                    from "Followers" F
-                                    where "ArtistId" = artist_id
-                                      and "UserId" <> user_id
-                                    limit 5)
--- находим артистов на которые подписаны найденные пользователи
-                 select F."ArtistId", A."Name" as "Artist Name"
-                 from get_artists(search_term, page, page_size) A
-                          join "Followers" F on f."ArtistId" = A."Id"
-                 where F."UserId" in (select followers."UserId" from followers)
-                   and F."ArtistId" <> artist_id
-                   and F."UserId" <> user_id
-                 group by F."ArtistId", A."Name"
-                 order by count(*);
 end;
 $$;
 

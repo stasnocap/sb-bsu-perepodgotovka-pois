@@ -1,0 +1,2 @@
+﻿GET {{host}}/tracks/by-popularity
+Authorization: Bearer {{auth_token}}

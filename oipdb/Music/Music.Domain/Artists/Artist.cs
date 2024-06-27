@@ -1,6 +1,7 @@
 ﻿using Music.Domain.Artists.Events;
 using Music.Domain.Artists.ValueObjects;
 using Music.Domain.Common.Models;
+using Music.Domain.Followers;
 
 namespace Music.Domain.Artists;
 

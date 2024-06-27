@@ -6,15 +6,13 @@ using Music.Domain.Artists.ValueObjects;
 
 namespace Music.Application.Artists.Commands.ChangeArtistName;
 
-public class ChangeArtistNameCommandHandler(IArtistRepository _artistRepository) : IRequestHandler<ChangeArtistNameCommand, ErrorOr<string>>
+public class ChangeArtistNameCommandHandler(IArtistRepository _artistRepository) : IRequestHandler<ChangeArtistNameCommand, ErrorOr<ArtistId>>
 {
-    public async Task<ErrorOr<string>> Handle(ChangeArtistNameCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<ArtistId>> Handle(ChangeArtistNameCommand request, CancellationToken cancellationToken)
     {
         var errors = new List<Error>();
 
-        var artistId = ArtistId.Create(request.Id);
-
-        if (await _artistRepository.SingleOrDefaultAsync(artistId, cancellationToken) is not { } artist)
+        if (await _artistRepository.SingleOrDefaultAsync(request.Id, cancellationToken) is not { } artist)
         {
             return Errors.Artist.NotFound;
         }
@@ -37,6 +35,6 @@ public class ChangeArtistNameCommandHandler(IArtistRepository _artistRepository)
 
         await _artistRepository.ChangeNameAsync(artist, cancellationToken);
 
-        return request.Name;
+        return request.Id;
     }
 }

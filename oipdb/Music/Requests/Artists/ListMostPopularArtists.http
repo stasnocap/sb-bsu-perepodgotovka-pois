@@ -1,0 +1,2 @@
+﻿GET {{host}}/artists/by-popularity
+Authorization: Bearer {{auth_token}}

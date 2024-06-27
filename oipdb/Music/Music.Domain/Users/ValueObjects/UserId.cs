@@ -1,4 +1,5 @@
-﻿using Music.Domain.Common.Models;
+﻿using ErrorOr;
+using Music.Domain.Common.Models;
 
 namespace Music.Domain.Users.ValueObjects;
 
@@ -9,6 +10,11 @@ public class UserId : ValueObject
     private UserId(Guid value)
     {
         Value = value;
+    }
+    
+    public static UserId Create(Guid id)
+    {
+        return new(id);
     }
     
     public static UserId CreateUnique()
