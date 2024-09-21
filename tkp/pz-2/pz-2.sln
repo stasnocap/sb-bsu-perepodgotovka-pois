@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeServer", "TimeServer\Ti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeClient", "TimeClient\TimeClient.csproj", "{FBFD9608-8156-4044-8372-24AFF700E3F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpConfiguration", "TcpConfiguration\TcpConfiguration.csproj", "{2334F513-E2C9-420E-91F3-C3AC3BE20019}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClockServer", "ClockServer\ClockServer.csproj", "{2334F513-E2C9-420E-91F3-C3AC3BE20019}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

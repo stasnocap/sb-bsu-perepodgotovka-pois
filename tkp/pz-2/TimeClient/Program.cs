@@ -1,38 +1,25 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using TcpConfiguration;
+﻿using ClockServer;
+using CoreRemoting;
 
-var serviceProvider = BuildServiceProvider();
+using var client = new RemotingClient(new ClientConfig()
+{
+    ServerHostName = "localhost",
+    ServerPort = 9090,
+});
 
-var tcpOptions = serviceProvider.GetRequiredService<IOptions<TcpOptions>>();
+client.Connect();
 
-var ipEndPoint = new IPEndPoint(IPAddress.Parse(tcpOptions.Value.Host), tcpOptions.Value.Port);
+// Create a proxy of the remote service, which behaves almost like a regular local object
+var proxy = client.CreateProxy<IStopwatch>();
 
-using TcpClient client = new();
-await client.ConnectAsync(ipEndPoint);
-await using NetworkStream stream = client.GetStream();
+Console.WriteLine("Starting stopwatch... Press enter to stop.");
 
-var buffer = new byte[1_024];
-int received = await stream.ReadAsync(buffer);
-
-var message = Encoding.UTF8.GetString(buffer, 0, received);
-Console.WriteLine($"Message received: \"{message}\"");
+proxy.Start();
 
 Console.ReadLine();
 
-static ServiceProvider BuildServiceProvider()
-{
-    var services = new ServiceCollection();
+var elapsedMilliseconds = proxy.Stop();
 
-    services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json")
-        .Build());
+Console.WriteLine($"Elapsed milliseconds: {elapsedMilliseconds}. Press enter to exit.");
 
-    services.AddTcpConfiguration();
-
-    return services.BuildServiceProvider();
-}
+Console.ReadLine();
