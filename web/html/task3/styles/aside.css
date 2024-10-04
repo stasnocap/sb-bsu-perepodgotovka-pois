@@ -1,0 +1,27 @@
+aside {
+  margin: 16px 0;
+}
+
+aside > div {
+  margin: 8px;
+  width: 170px;
+  border: solid darkgray 1px;
+}
+
+aside h3 {
+  margin: 8px;
+  padding-left: 25px;
+}
+
+aside p {
+  text-align: center;
+}
+
+aside .links {
+  padding-bottom: 5px;
+}
+
+aside .links a {
+  display: block;
+  text-align: center;
+}

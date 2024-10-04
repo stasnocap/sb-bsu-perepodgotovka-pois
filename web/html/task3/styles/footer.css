@@ -1,0 +1,11 @@
+footer {
+  border-top: darkgray solid 2px;
+  border-bottom: lightgray solid 1px;
+  padding: 10px 16px;
+}
+
+footer > div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}

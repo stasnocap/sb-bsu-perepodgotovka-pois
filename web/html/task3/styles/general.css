@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  color: darkgray;
+}
+
+section {
+  padding: 0 16px;
+}
+
+main {
+  display: flex;
+}
+
+main h3 {
+  background-color: lightgray;
+  font-weight: normal;
+  color: darkblue;
+  font-style: italic;
+}
+
+main section h3 {
+  padding-left: 40px;
+}
+
+a {
+  color: lightgreen;
+}

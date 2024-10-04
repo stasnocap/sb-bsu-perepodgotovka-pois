@@ -1,0 +1,30 @@
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.brand-name {
+  color: lightgreen;
+  font-size: 35px;
+  font-style: italic;
+  margin: 60px 0 0 40px;
+}
+
+.brand-quote {
+  margin: 10px 0 0 100px;
+  color: darkblue;
+}
+
+.brand-image {
+  width: 293px;
+  height: 200px;
+  object-fit: none;
+}
+
+nav {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: darkgray;
+  padding: 20px 0;
+  color: white;
+}
