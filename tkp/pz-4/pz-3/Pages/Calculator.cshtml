@@ -1,0 +1,49 @@
+@page
+
+@model CalculatorModel
+
+@{
+    ViewData["Title"] = "Calculator";
+}
+
+<h1>Калькулятор</h1>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Calculator.Value1" class="control-label"></label>
+                <input asp-for="Calculator.Value1" class="form-control"/>
+                <span asp-validation-for="Calculator.Value1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Calculator.Value2" class="control-label"></label>
+                <input asp-for="Calculator.Value2" class="form-control"/>
+                <span asp-validation-for="Calculator.Value2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Calculator.Action" class="control-label"></label>
+                <input asp-for="Calculator.Action" class="form-control"/>
+                <span asp-validation-for="Calculator.Action" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Calculate" class="btn btn-primary"/>
+            </div>
+            @if (Model.Calculator.Result != 0)
+            {
+                <div class="form-group">
+                    <label asp-for="Calculator.Result" class="control-label"></label>
+                    <span class="form-control">@Model.Calculator.Result</span>
+                    <span asp-validation-for="Calculator.Result" class="text-danger"></span>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
