@@ -1,12 +1,3 @@
-function getRandomArray(length = 10) {
-  const array = [];
-  for (let i = 0; i < length; i++) {
-    array[i] = Math.floor(Math.random() * length);
-  }
-  console.log(`Random array of length ${length} was created: ${array}`)
-  return array;
-}
-
 /*
   1. Создать массив и найти в нем номер наибольшего элемента
  */
@@ -81,4 +72,13 @@ function reverseRandomArray(length) {
   }
   
   console.log(`Reversed array: ${array}`);
+}
+
+function getRandomArray(length = 10) {
+  const array = [];
+  for (let i = 0; i < length; i++) {
+    array[i] = Math.floor(Math.random() * length);
+  }
+  console.log(`Random array of length ${length} was created: ${array}`)
+  return array;
 }
