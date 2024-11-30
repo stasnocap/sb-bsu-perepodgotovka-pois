@@ -41,7 +41,7 @@
                 <Button Content="I"  />
                 <Button Content="you" />
                 <Button Content="we" />
-                <Button Content="they" />
+                <Button Content="it" />
                 <Button Content="he" />
                 <Button Content="she" />
             </WrapPanel>
