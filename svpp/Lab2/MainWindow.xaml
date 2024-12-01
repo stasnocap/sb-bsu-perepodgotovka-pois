@@ -1,0 +1,79 @@
+﻿<Window x:Class="Lab2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="DockPanel">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style x:Key="Center" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Column="0">
+            <TextBlock>Последние документы</TextBlock>
+            <TextBlock>1.txt</TextBlock>
+            <TextBlock>2.txt</TextBlock>
+            <TextBlock>3.txt</TextBlock>
+            <TextBlock>4.txt</TextBlock>
+            <TextBlock>5.txt</TextBlock>
+            <TextBlock>6.txt</TextBlock>
+        </StackPanel>
+        
+        <StackPanel Orientation="Vertical" Grid.Column="1">
+            <StackPanel Orientation="Horizontal">
+                <Button>Открыть</Button>
+                <Button>Сохранить</Button>
+                <Button>Закрыть</Button>
+                <Button>Обработать</Button>
+                <Button>О программе</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock><Bold>1.txt</Bold></TextBlock>
+                <TextBlock>2.txt</TextBlock>
+                <TextBlock>3.txt</TextBlock>
+            </StackPanel>
+            <WrapPanel HorizontalAlignment="Stretch">
+                <DockPanel Background="Yellow">
+                    <TextBlock Text="A" Style="{StaticResource Center}"/>
+                </DockPanel>
+                <DockPanel Background="Red">
+                    <TextBlock Text="B" Style="{StaticResource Center}"/>
+                </DockPanel>
+                <DockPanel Background="Green">
+                    <TextBlock Text="C" Style="{StaticResource Center}"/>
+                </DockPanel>
+                <DockPanel Background="Blue">
+                    <TextBlock Text="D" Style="{StaticResource Center}"/>
+                </DockPanel>
+                <DockPanel Background="Gray">
+                    <TextBlock Text="E" Style="{StaticResource Center}"/>
+                </DockPanel>
+                <DockPanel Background="AntiqueWhite">
+                    <TextBlock Text="F" Style="{StaticResource Center}"/>
+                </DockPanel>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
+</Window>
