@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выпадающее меню</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .menu {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            list-style-type: none;
+            margin: 0;
+        }
+        .menu > li {
+            position: relative;
+            margin-right: 20px;
+        }
+        .menu > li > a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+        }
+        .menu > li > a:hover {
+            background-color: #555;
+        }
+        .submenu {
+            display: none;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            background-color: #444;
+            padding: 0;
+            list-style-type: none;
+            margin: 0;
+        }
+        .submenu > li > a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+        }
+        .submenu > li > a:hover {
+            background-color: #666;
+        }
+        .menu > li:hover .submenu {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <ul class="menu">
+        <li>
+            <a href="#">Главная</a>
+        </li>
+        <li>
+            <a href="#">О нас</a>
+            <ul class="submenu">
+                <li><a href="#">Наша команда</a></li>
+                <li><a href="#">Наши проекты</a></li>
+                <li><a href="#">Контакты</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Услуги</a>
+            <ul class="submenu">
+                <li><a href="#">Консультации</a></li>
+                <li><a href="#">Поддержка</a></li>
+                <li><a href="#">Аудит</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Контакты</a>
+        </li>
+    </ul>
+</body>
+</html>
