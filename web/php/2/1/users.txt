@@ -1,0 +1,6 @@
+user=admin
+pass=qwerty98
+user=dima
+pass=dimapass
+user=lena
+pass=678ttt
