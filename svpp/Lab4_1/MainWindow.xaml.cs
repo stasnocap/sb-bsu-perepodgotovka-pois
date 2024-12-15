@@ -1,16 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Lab3_2
+namespace Lab4_1
 {
     public partial class MainWindow : Window
     {
         private bool isDrawing = false;
         private Point startPoint;
-        private Brush brushColor = Brushes.Black;
-        private double brushSize = 2;
 
         public MainWindow()
         {
@@ -27,11 +24,12 @@ namespace Lab3_2
         {
             if (isDrawing)
             {
+                var viewModel = (DrawingViewModel)DataContext;
                 Point currentPoint = e.GetPosition(DrawingCanvas);
                 Line line = new Line
                 {
-                    Stroke = brushColor,
-                    StrokeThickness = brushSize,
+                    Stroke = viewModel.BrushColor,
+                    StrokeThickness = viewModel.BrushSize,
                     X1 = startPoint.X,
                     Y1 = startPoint.Y,
                     X2 = currentPoint.X,
@@ -47,29 +45,9 @@ namespace Lab3_2
             isDrawing = false;
         }
 
-        private void BrushColorComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            string selectedColor = (BrushColorComboBox.SelectedItem as System.Windows.Controls.ComboBoxItem).Content.ToString();
-            brushColor = selectedColor switch
-            {
-                "Красный" => Brushes.Red,
-                "Синий" => Brushes.Blue,
-                "Зеленый" => Brushes.Green,
-                _ => Brushes.Black
-            };
-        }
-
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             DrawingCanvas.Children.Clear();
-        }
-
-        private void BrushSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (e.NewValue != e.OldValue)
-            {
-                brushSize = e.NewValue;
-            }
         }
     }
 }
